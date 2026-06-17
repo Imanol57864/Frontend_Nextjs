@@ -1,6 +1,7 @@
-import { requireApiUser } from "@/lib/auth";
+﻿import { requireApiUser } from "@/lib/auth";
 import { FILE_BUCKET } from "@/lib/files";
 import { jsonError, jsonOk } from "@/lib/http";
+import { uploadAnalysisFile } from "@/lib/storageFiles";
 
 export async function POST(request) {
   const session = await requireApiUser();
@@ -10,9 +11,8 @@ export async function POST(request) {
   const file = form.get("analisis_file");
   const labname = String(form.get("labname") || "");
   const code = String(form.get("a_code") || "");
-  const regex = /^\d{3}$/;
 
-  if (!file || !labname || !regex.test(code)) {
+  if (!file || !labname || !/^\d{3}$/.test(code)) {
     return jsonOk({ message: "Peticion incompleta.", data: [] });
   }
 
@@ -23,9 +23,10 @@ export async function POST(request) {
     .eq("nombre_lab", labname);
 
   if (labError) return jsonError();
+
   const labCode = labs?.[0]?.codigo_lab;
   if (!labCode) {
-    return jsonOk({ message: "El laboratorio no cuenta con un código de analisis definido.", data: [] });
+    return jsonOk({ message: "El laboratorio no cuenta con un código de análisis definido.", data: [] });
   }
 
   const idAnalisis = `${labCode}${code}`;
@@ -40,27 +41,14 @@ export async function POST(request) {
     return jsonError();
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const { data: fileData, error: uploadError } = await supabase.storage
-    .from(FILE_BUCKET)
-    .upload(`${idAnalisis}/${file.name}`, buffer, { contentType: file.type || "application/octet-stream" });
+  const { error: fileError } = await uploadAnalysisFile({
+    supabase,
+    bucket: FILE_BUCKET,
+    idAnalisis,
+    file,
+    tipoArchivo: "Cotización"
+  });
 
-  console.log("found1", uploadError)
-  if (uploadError) return jsonError("1Internal Server Error.", uploadError.status || 500);
-
-  const { error: relationError } = await supabase
-    .from("Archivo_Analisis")
-    .insert([{ id_analisis: idAnalisis, uuid_archivo: fileData.id }]);
-
-  console.log("found2", relationError)
-  if (relationError) return jsonError("2Internal Server Error.", relationError.status || 500);
-
-  const { error: typeError } = await supabase
-    .from("Archivo_Analisis")
-    .update({ tipo_archivo: "Cotización" })
-    .eq("uuid_archivo", fileData.id);
-
-  console.log("found3", typeError)
-  if (typeError) return jsonError("3Internal Server Error.", typeError.status || 500);
+  if (fileError) return jsonError("Internal Server Error.", fileError.status || 500);
   return jsonOk();
 }

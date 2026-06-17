@@ -5,7 +5,8 @@ import LoadScreen from "@/components/LoadScreen";
 import ConfirmPopup from "@/components/ConfirmPopup";
 import AddFilePopup from "@/components/AddFilePopup";
 import FilesAgGrid from "@/components/LazyFilesAgGrid";
-import Link from "next/link";
+import BackToDashboard from "@/components/BackToDashboard";
+import { Panel, PanelToolbar } from "@/components/Panel";
 
 export const metadata = {
   title: "IFC | Archivos"
@@ -25,50 +26,39 @@ export default async function FilesPage({ params }) {
   return (
     <>
       <PageChrome userEmail={user.email ?? "[...]"}>
-        <div className="card" style={{ marginBottom: 20 }}>
-          <div className="dashboard-grid grid_01" style={{ marginBottom: 0 }}>
-            <p className="card search_at_table" style={{ lineHeight: 1.3 }}>
+        <Panel className="page-intro">
+          <PanelToolbar columns="panel-grid-3" className="mb-0">
+            <p className="notice-card">
               &bull; Por seguridad los archivos estarán disponibles durante 10 minutos.
               <br />
-              &bull; Al terminar el tiempo, recarga la pagina para seguir consultando.
+              &bull; Al terminar el tiempo, recarga la página para seguir consultando.
               <br />
-              &bull; Para compartirlos, descarguelos y envielos por algun otro medio.
+              &bull; Para compartirlos, descárgalos y envíalos por otro medio.
             </p>
-            <h3 id="id_analisis_div" style={{ alignSelf: "center", height: "100%", fontSize: 24 }} className="card">
+            <h3 id="id_analisis_div" className="analysis-id-card">
               {idAnalisis}
             </h3>
-            <Link id="returnHome" href="/main_catalog" className="func_button">
-              Regresar al tablero
-            </Link>
-          </div>
-        </div>
+            <BackToDashboard />
+          </PanelToolbar>
+        </Panel>
 
-        <div id="bottomTables" className="card">
-          <div className="dashboard-grid grid_02">
-            <div className="card">
+        <Panel id="bottomTables">
+          <PanelToolbar columns="panel-grid-2">
+            <div className="panel-control">
               <input className="search_at_table" id="search" placeholder="Buscar..." />
             </div>
-            <button id="add-file" className="func_button">
+            <button id="add-file" className="btn-primary">
               A&ntilde;adir archivo
             </button>
-          </div>
-          <div className="dashboard-grid">
+          </PanelToolbar>
+          <div className="table-wrap">
             <FilesAgGrid idAnalisis={idAnalisis} />
           </div>
-        </div>
+        </Panel>
       </PageChrome>
       <LoadScreen />
       <ConfirmPopup />
-      <buttonddFilePopup idAnalisis={idAnalisis} />
+      <AddFilePopup idAnalisis={idAnalisis} />
     </>
   );
 }
-
-
-
-
-
-
-
-
-

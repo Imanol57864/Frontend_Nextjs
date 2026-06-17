@@ -1,14 +1,11 @@
-import { requireApiUser } from "@/lib/auth";
+﻿import { withApiUser } from "@/lib/api";
 import { jsonError, jsonOk, readJson } from "@/lib/http";
 
-export async function POST(request) {
-  const session = await requireApiUser();
-  if (!session.ok) return session.response;
-
+export const POST = withApiUser(async ({ request, supabase }) => {
   const { labname = "" } = await readJson(request);
   if (!labname) return jsonOk({ message: "Peticion incompleta.", data: [] });
 
-  const { data, error } = await session.supabase
+  const { data, error } = await supabase
     .from("catAnalisis")
     .select("*")
     .eq("id_catLabos", labname)
@@ -16,4 +13,4 @@ export async function POST(request) {
 
   if (error) return jsonError();
   return jsonOk({ message: "", data: data ?? [] });
-}
+});

@@ -51,8 +51,8 @@ export default function FilesAgGrid({ idAnalisis }) {
   }), [idAnalisis]);
 
   async function loadFiles() {
-    window.activateLoadScreen?.();
     if (!idAnalisis) return alert("Error. ID can not be empty.");
+    window.activateLoadScreen?.();
 
     const result = await postJson("/files/get-analisis-filesdata", { id_analisis: idAnalisis });
     if (!result.ok) return false;
@@ -129,8 +129,7 @@ function openFileRenderer(params) {
   link.rel = "noopener noreferrer"; // Buenas prácticas de seguridad al usar _blank
   link.innerText = "Abrir";
   
-  // 3. Estilos visuales (puedes cambiar los colores si quieres diferenciarlo del otro botón)
-  link.className = "inline-flex items-center justify-center w-full h-full px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium transition-colors";
+  link.className = "action-button btn-secondary";
   link.style.textDecoration = 'none';
   link.style.display = 'inline-flex';
 
@@ -154,7 +153,7 @@ function deleteRenderer(params) {
     const result = await postJson("/files/removefile", { filename: nombreArchivo, id_analisis: idAnalisis });
     await params.context.reload();
     if (result.ok && !result.data.message) alert("Se eliminó el archivo con éxito.");
-  });
+  }, "danger");
 }
 
 function dateFormatter(params) {
@@ -164,6 +163,10 @@ function dateFormatter(params) {
     timeStyle: "short"
   });
 }
+
+
+
+
 
 
 

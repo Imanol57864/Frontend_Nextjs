@@ -66,9 +66,9 @@ export default function CatalogAgGrid() {
   }), []);
 
   async function loadAnalisis(labnameInput) {
-    window.activateLoadScreen?.();
     const labname = labnameInput || "";
     if (!labname) return false;
+    window.activateLoadScreen?.();
     selectedLabRef.current = labname;
 
     const result = await postJson("/load-analisis", { labname });
@@ -170,7 +170,6 @@ export default function CatalogAgGrid() {
   }
 
   async function selectLab(labname) {
-    window.activateLoadScreen?.();
     document.getElementById("bottomTables")?.classList.remove("hide");
     const info = await queryLabInfo(labname);
     if (!info) return;
@@ -346,8 +345,7 @@ function filesViewRenderer(params) {
   link.href = hrefTarget;
   link.innerText = "Consultar";
   
-  // 3. Agregamos las clases de CSS para que luzca como botón
-  link.className = "inline-flex items-center justify-center w-full h-full px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium transition-colors";
+  link.className = "action-button btn-secondary";
   link.style.textDecoration = 'none';
   link.style.display = 'inline-flex';
 
@@ -381,7 +379,7 @@ function actionsRenderer(params) {
     });
     const result = await readJsonResponse(response);
     if (result.ok && !result.data.message) alert("Se borró el análisis con éxito.");
-  });
+  }, "danger");
 }
 
 async function queryLabInfo(labname) {
@@ -463,6 +461,11 @@ async function exportPdf(api) {
   });
   doc.save("data.pdf");
 }
+
+
+
+
+
 
 
 

@@ -4,7 +4,8 @@ import LoadScreen from "@/components/LoadScreen";
 import ConfirmPopup from "@/components/ConfirmPopup";
 import CreateAnalisisPopup from "@/components/CreateAnalisisPopup";
 import LaboratoriesAgGrid from "@/components/LazyLaboratoriesAgGrid";
-import Link from "next/link"
+import BackToDashboard from "@/components/BackToDashboard";
+import { Panel, PanelToolbar } from "@/components/Panel";
 
 export const metadata = {
   title: "IFC | Laboratorios"
@@ -16,22 +17,20 @@ export default async function LaboratoriesPage() {
   return (
     <>
       <PageChrome userEmail={user.email ?? "[...]"}>
-        <div id="bottomTables" className="card">
-          <div className="dashboard-grid grid_01">
-            <div className="card">
+        <Panel id="bottomTables">
+          <PanelToolbar columns="panel-grid-3">
+            <div className="panel-control">
               <input className="search_at_table" id="search" placeholder="Buscar..." />
             </div>
-            <button id="add-lab" className="func_button">
+            <button id="add-lab" className="btn-primary">
               A&ntilde;adir laboratorio
             </button>
-            <Link id="returnHome" href="/main_catalog" className="func_button">
-              Tablero analisis
-            </Link>
-          </div>
-          <div className="dashboard-grid">
+            <BackToDashboard label="Tablero principal" />
+          </PanelToolbar>
+          <div className="table-wrap">
             <LaboratoriesAgGrid />
           </div>
-        </div>
+        </Panel>
       </PageChrome>
       <LoadScreen />
       <ConfirmPopup />
@@ -39,12 +38,3 @@ export default async function LaboratoriesPage() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-

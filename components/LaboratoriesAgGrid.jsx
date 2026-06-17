@@ -151,7 +151,7 @@ function actionsRenderer(params) {
 
     const result = await postJson("/laboratories/delete", { labName: row.nombre_lab });
     if (result.ok && !result.data.message) alert("Se eliminó el laboratorio con éxito.");
-  }));
+  }, "danger"));
 
   return wrapper;
 }
@@ -165,5 +165,8 @@ async function sendTableChange(rowId, field, newValue) {
     (data, result) => !result.ok || data.IdDuplicate || data.resetUI
   );
 }
+
+
+
 
 

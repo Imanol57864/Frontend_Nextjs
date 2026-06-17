@@ -58,9 +58,9 @@ export function useQuickFilter(apiRef, inputId = "search") {
   }, [apiRef, inputId]);
 }
 
-export function makeButton(text, onClick) {
+export function makeButton(text, onClick, variant = "secondary") {
   const button = document.createElement("button");
-  button.classList.add("action-button");
+  button.classList.add("action-button", variant === "danger" ? "btn-danger" : "btn-secondary");
   button.type = "button";
   button.textContent = text;
   button.addEventListener("click", onClick);
@@ -150,7 +150,6 @@ export async function sendCellChange(url, rowId, field, newValue, isBlocked = (d
 }
 
 export async function readJsonResponse(response) {
-  console.log("tagged", response)
   const data = await response.json();
   if (!response.ok) {
     console.error(data.message);
@@ -159,6 +158,10 @@ export async function readJsonResponse(response) {
   if (data.message) alert(data.message);
   return { ok: true, data };
 }
+
+
+
+
 
 
 
