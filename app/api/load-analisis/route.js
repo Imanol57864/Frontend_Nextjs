@@ -2,13 +2,11 @@
 import { jsonError, jsonOk, readJson } from "@/lib/http";
 
 export const POST = withApiUser(async ({ request, supabase }) => {
-  const { labname = "" } = await readJson(request);
-  if (!labname) return jsonOk({ message: "Peticion incompleta.", data: [] });
+  await readJson(request);
 
   const { data, error } = await supabase
     .from("catAnalisis")
     .select("*")
-    .eq("id_catLabos", labname)
     .order("id_analisis", { ascending: true });
 
   if (error) return jsonError();

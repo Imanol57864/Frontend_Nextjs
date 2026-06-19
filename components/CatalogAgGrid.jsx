@@ -24,10 +24,11 @@ const CATEGORY_OPTIONS = [
   "OTROS"
 ];
 
+const expandedDescriptionRows = new Set();
+
 export default function CatalogAgGrid() {
   const gridRef = useRef(null);
   const rowsRef = useRef([]);
-  const selectedLabRef = useRef("");
   const divisaDestinoRef = useRef("MXN");
   const divisaBaseRef = useRef("MXN");
   const analysisRealtimeRef = useRef(null);
@@ -35,10 +36,11 @@ export default function CatalogAgGrid() {
 
   const apiRef = useAgGrid(gridRef, () => ({
     ...DEFAULT_GRID_OPTIONS,
+    domLayout: "autoHeight",
     getRowId: (params) => String(params.data.id_analisis),
     columnDefs: [
-      { headerName: "Acciones", cellRenderer: actionsRenderer, width: 110, sortable: false, filter: false },
-      { headerName: "Código 2026", field: "id_analisis", editable: true, width: 140, cellEditor: "agTextCellEditor" },
+      { headerName: "Laboratorio", field: "id_catLabos", width: 140, pinned: 'left' },
+      { headerName: "Código 2026", field: "id_analisis", editable: true, width: 140, cellEditor: "agTextCellEditor", pinned: 'left'},
       { headerName: "Descripción", field: "descripcion", cellRenderer: descriptionRenderer, width: 430, autoHeight: true, wrapText: true, sortable: false },
       { headerName: "Cantidad", field: "y_cantidad", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
       { headerName: "Precio", field: "y_precio", width: 140, valueFormatter: (params) => currencyFormatter(params, divisaBaseRef, divisaDestinoRef) },
@@ -47,11 +49,12 @@ export default function CatalogAgGrid() {
       { headerName: "Factor", field: "c_factor", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
       { headerName: "Envío", field: "c_envio", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser, valueFormatter: (params) => currencyFormatter(params, divisaBaseRef, divisaDestinoRef) },
       { headerName: "Utilidad", field: "c_utilidad", width: 140, valueFormatter: (params) => currencyFormatter(params, divisaBaseRef, divisaDestinoRef) },
+      { headerName: "Acciones", cellRenderer: actionsRenderer, width: 110, sortable: false, filter: false },
       { headerName: "Archivos", cellRenderer: filesViewRenderer, width: 140, sortable: false, filter: false },
       ...Object.keys(DESCRIPTION_FIELDS).map((field) => ({ field, hide: true }))
     ],
     context: {
-      reload: () => loadAnalisis(selectedLabRef.current),
+      reload: () => loadAnalisis(),
       closeSources,
       descriptionFields: DESCRIPTION_FIELDS
     },
@@ -61,18 +64,14 @@ export default function CatalogAgGrid() {
       const newValue = typeof event.newValue === "string" ? event.newValue.trim() : event.newValue;
       const rowId = field === "id_analisis" ? event.oldValue : event.data.id_analisis;
       const ok = await sendTableChange(rowId, field, newValue);
-      if (!ok || field === "id_analisis") await loadAnalisis(selectedLabRef.current);
+      if (!ok || field === "id_analisis") await loadAnalisis();
     }
   }), []);
 
-  async function loadAnalisis(labnameInput) {
-    const labname = labnameInput || "";
-    if (!labname) return false;
+  async function loadAnalisis() {
     window.activateLoadScreen?.();
     try {
-      selectedLabRef.current = labname;
-
-      const result = await postJson("/load-analisis", { labname });
+      const result = await postJson("/load-analisis");
       if (!result.ok) return false;
 
       rowsRef.current = result.data.data || [];
@@ -90,14 +89,13 @@ export default function CatalogAgGrid() {
     labRealtimeRef.current = null;
   }
 
-  function createAnalysisRealtime(labname) {
+  function createAnalysisRealtime() {
     analysisRealtimeRef.current?.close();
-    if (!labname) return;
     analysisRealtimeRef.current = subscribeToTableChanges({
-      channelName: `catAnalisis:${labname}`,
+      channelName: `catAnalisis`,
       table: "catAnalisis",
       onPayload: (payload) => {
-        const data = analysisPayloadEventForLab(payload, labname);
+        const data = analysisPayloadEventForLab(payload);
         if (data) handleAnalisisEvent(data);
       }
     });
@@ -109,10 +107,11 @@ export default function CatalogAgGrid() {
       rowsRef,
       data,
       idField: "id_analisis",
-      reload: () => loadAnalisis(selectedLabRef.current)
+      reload: () => loadAnalisis()
     });
   }
 
+  /*
   function createLabRealtime() {
     labRealtimeRef.current?.close();
     const source = subscribeToTableChanges({
@@ -144,7 +143,9 @@ export default function CatalogAgGrid() {
     });
     labRealtimeRef.current = source;
   }
+    */
 
+  /*
   function syncLabOption(labOptionsList, data, nextLabName) {
     const currentOption = labOptionsList.querySelector(`[data-labname="${data.id}"]`);
     const nextOption = nextLabName ? labOptionsList.querySelector(`[data-labname="${nextLabName}"]`) : null;
@@ -163,39 +164,18 @@ export default function CatalogAgGrid() {
 
     if (data.type === "DELETE" && currentOption) currentOption.remove();
   }
+    */
 
+  /*
   function makeLabOption(labname) {
     const item = document.createElement("div");
     item.classList.add("option-item");
     item.setAttribute("data-labname", labname);
     item.innerHTML = `<strong>${labname}</strong>`;
-    item.addEventListener("click", () => selectLab(labname));
     return item;
   }
+    */
 
-  async function selectLab(labname) {
-    document.getElementById("bottomTables")?.classList.remove("hide");
-    const info = await queryLabInfo(labname);
-    if (!info) return;
-
-    const divisa = applyLabInfo(info);
-
-    await loadAnalisis(labname);
-    createAnalysisRealtime(labname);
-    setNewDivisa(divisa, divisa);
-  }
-
-
-  function applyLabInfo(info) {
-    const def = "[...]";
-    const divisa = info?.divisa_lab || "MXN";
-    document.getElementById("lab-title").textContent = info?.nombre_lab || def;
-    document.getElementById("lab-country").textContent = info?.pais_lab || def;
-    document.getElementById("lab-info-location").textContent = info?.direccion_lab || def;
-    document.getElementById("lab-info-contact").textContent = info?.contacto_lab || def;
-    document.getElementById("lab-divisa").textContent = divisa;
-    return divisa;
-  }
   function setNewDivisa(divisa, base) {
     window.activateLoadScreen?.();
     try {
@@ -210,7 +190,15 @@ export default function CatalogAgGrid() {
   useEffect(() => {
     window.triggerGrid = loadAnalisis;
     window.setNewDivisa = setNewDivisa;
-    createLabRealtime();
+    // createLabRealtime();
+    let cancelled = false;
+
+    async function initializeCatalog() {
+      const loaded = await loadAnalisis();
+      if (!cancelled && loaded) createAnalysisRealtime();
+    }
+
+    initializeCatalog();
 
     const logout = document.getElementById("logout-btn");
     const manageLabs = document.getElementById("getLabView_btn");
@@ -222,25 +210,13 @@ export default function CatalogAgGrid() {
     manageLabs?.addEventListener("click", goToLabs);
 
     return () => {
+      cancelled = true;
       closeSources();
       logout?.removeEventListener("click", closeSources);
       manageLabs?.removeEventListener("click", goToLabs);
       if (window.triggerGrid === loadAnalisis) delete window.triggerGrid;
       if (window.setNewDivisa === setNewDivisa) delete window.setNewDivisa;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const options = document.querySelectorAll(".option-item");
-    const handlers = [];
-    options.forEach((item) => {
-      const labname = item.getAttribute("data-labname");
-      const handler = () => selectLab(labname);
-      handlers.push([item, handler]);
-      item.addEventListener("click", handler);
-    });
-    return () => handlers.forEach(([item, handler]) => item.removeEventListener("click", handler));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -257,53 +233,6 @@ export default function CatalogAgGrid() {
     return () => pdfButton?.removeEventListener("click", onPdfClick);
   }, []);
 
-  useEffect(() => {
-    const searchInput = document.getElementById("labSearchInput");
-    const optionsList = document.getElementById("labOptionsList");
-    const bottomTables = document.getElementById("bottomTables");
-    if (!searchInput || !optionsList) return undefined;
-
-    const show = () => optionsList.classList.remove("hide");
-    const filter = (event) => {
-      const value = event.target.value.toLowerCase();
-      optionsList.querySelectorAll(".option-item").forEach((item) => {
-        const labname = item.getAttribute("data-labname")?.toLowerCase() || "";
-        item.classList.toggle("hide", !labname.includes(value));
-      });
-    };
-    const click = (event) => {
-      const item = event.target.closest(".option-item");
-      if (item) {
-        window.activateLoadScreen?.();
-        try {
-          optionsList.classList.add("hide");
-          searchInput.value = "";
-          optionsList.querySelectorAll(".option-item").forEach((candidate) => {
-            candidate.classList.remove("hide", "hide-already-selected");
-          });
-          item.classList.add("hide-already-selected");
-          bottomTables?.classList.remove("hide");
-        } finally {
-            window.deactivateLoadScreen?.();
-        }
-      }
-    };
-    const outside = (event) => {
-      if (!event.target.closest(".searchable-dropdown")) optionsList.classList.add("hide");
-    };
-
-    searchInput.addEventListener("focus", show);
-    searchInput.addEventListener("input", filter);
-    optionsList.addEventListener("click", click);
-    document.addEventListener("click", outside);
-    return () => {
-      searchInput.removeEventListener("focus", show);
-      searchInput.removeEventListener("input", filter);
-      optionsList.removeEventListener("click", click);
-      document.removeEventListener("click", outside);
-    };
-  }, []);
-
   return <div ref={gridRef} id="table" className={GRID_CLASS_NAME} style={GRID_STYLE} />;
 }
 
@@ -315,21 +244,10 @@ function descriptionText(data) {
 function descriptionRenderer(params) {
   const wrapper = document.createElement("div");
   const data = params.data;
+  const rowId = String(data.id_analisis);
   data.description_at_pdf = descriptionText(data);
 
-  Object.entries(DESCRIPTION_FIELDS).forEach(([field, label]) => {
-    const element = document.createElement("div");
-    element.classList.add("desc-card", "desc-text");
-    const bold = document.createElement("strong");
-    bold.textContent = label;
-    const value = document.createElement("a");
-    value.textContent = data[field] || "[...]";
-    element.appendChild(bold);
-    element.appendChild(value);
-    wrapper.appendChild(element);
-  });
-
-  wrapper.addEventListener("click", async () => {
+  async function editDescription() {
     const sendChange = await window.editdescPopup?.(data);
     if (!sendChange) return;
     window.activateLoadScreen?.();
@@ -345,7 +263,74 @@ function descriptionRenderer(params) {
     } finally {
       window.deactivateLoadScreen?.();
     }
-  });
+  }
+
+  function resetDescriptionHeight() {
+    window.requestAnimationFrame(() => {
+      params.api.resetRowHeights();
+      params.api.refreshCells({ rowNodes: [params.node], columns: ["descripcion"], force: true });
+    });
+  }
+
+  function render() {
+    const expanded = expandedDescriptionRows.has(rowId);
+    wrapper.replaceChildren();
+    wrapper.className = `description-box${expanded ? " is-expanded" : " is-compact"}`;
+
+    const toolbar = document.createElement("div");
+    toolbar.className = "description-toolbar";
+
+    const actions = document.createElement("div");
+    actions.className = "description-actions";
+
+    const toggleButton = document.createElement("button");
+    toggleButton.type = "button";
+    toggleButton.className = "description-link";
+    toggleButton.textContent = expanded ? "Compactar" : "Ver más";
+    toggleButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (expanded) {
+        expandedDescriptionRows.delete(rowId);
+      } else {
+        expandedDescriptionRows.add(rowId);
+      }
+      render();
+      resetDescriptionHeight();
+    });
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "description-link";
+    editButton.textContent = "Editar";
+    editButton.addEventListener("click", async (event) => {
+      event.stopPropagation();
+      await editDescription();
+    });
+
+    actions.appendChild(toggleButton);
+    actions.appendChild(editButton);
+    toolbar.appendChild(actions);
+
+    const content = document.createElement("div");
+    content.className = "description-content";
+
+    Object.entries(DESCRIPTION_FIELDS).forEach(([field, label]) => {
+      const element = document.createElement("div");
+      element.classList.add("desc-card", "desc-text");
+      const bold = document.createElement("strong");
+      bold.textContent = label;
+      const value = document.createElement("a");
+      value.textContent = data[field] || "[...]";
+      element.appendChild(bold);
+      element.appendChild(value);
+      content.appendChild(element);
+    });
+
+    wrapper.appendChild(toolbar);
+    wrapper.appendChild(content);
+  }
+
+  render();
 
   return wrapper;
 }
@@ -482,9 +467,6 @@ async function exportPdf(api) {
   });
   doc.save("data.pdf");
 }
-
-
-
 
 
 

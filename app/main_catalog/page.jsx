@@ -6,7 +6,7 @@ import LoadScreen from "@/components/LoadScreen";
 import ConfirmPopup from "@/components/ConfirmPopup";
 import EditDescPopup from "@/components/EditDescPopup";
 import CatalogAgGrid from "@/components/LazyCatalogAgGrid";
-import { Panel, PanelBody, PanelToolbar } from "@/components/Panel";
+import { Panel, PanelBody } from "@/components/Panel";
 
 export const metadata = {
   title: "IFC | Análisis"
@@ -23,66 +23,37 @@ export default async function CatalogPage() {
     <>
       <PageChrome userEmail={user.email ?? "[...]"}>
         <Panel>
-          <PanelBody>
-            <PanelToolbar columns="panel-grid-catalog" className="hero-toolbar">
-              <div className="panel-control">
-                <div className="searchable-dropdown">
-                  <span className="toolbar-label">Laboratorio</span>
-                  <input type="text" id="labSearchInput" placeholder="Escribe o selecciona un laboratorio" autoComplete="off" />
-                  <div id="labOptionsList" className="options-list hide">
-                    {labsNames.map((item) => (
-                      <div className="option-item" data-labname={item.nombre_lab} key={item.nombre_lab}>
-                        <strong>{item.nombre_lab}</strong>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <Link id="getLabView_btn" href="/main_catalog/laboratories" className="btn-primary">
+          <PanelBody className="catalog-sticky-toolbar">
+            <div className="catalog-topbar">
+              <Link id="getLabView_btn" href="/main_catalog/laboratories" className="btn-primary catalog-primary-action">
                 Gestionar Laboratorios
               </Link>
-            </PanelToolbar>
 
-            <PanelToolbar columns="panel-grid-info">
-              <div className="panel-control panel-control-main">
-                <div id="lab-title" className="lab-title">[...]</div>
-                <div id="lab-country" className="lab-country">[...]</div>
-                <div className="lab-info">
-                  <span id="lab-info-location">[...]</span>
-                  <br />
-                  <span id="lab-info-contact">[...]</span>
+              <div className="toolbar-field catalog-search">
+                <input className="search_at_table" id="search" placeholder="Busqueda universal de cualquier palabra" />
+              </div>
+
+              <div className="catalog-command-cluster">
+                <button id="download-pdf" className="btn-primary">PDF</button>
+                <div className="currency-actions">
+                  <button id="btn_changeto_mxn" className="btn-secondary">MXN</button>
+                  <button id="btn_changeto_usd" className="btn-secondary">USD</button>
+                  <button id="btn_changeto_eur" className="btn-secondary">EUR</button>
                 </div>
               </div>
-              <div className="panel-control">
-                <div className="metric currency-metric">
-                  <p id="lab-divisa">[...]</p>
-                </div>
+
+              <div className="catalog-rate-strip">
+                {staticInfo.map((item) => (
+                  <div className="metric" id={`estatico_${item.id}`} key={item.id}>
+                    <h4>{item.marker}</h4>
+                    <p>$ {Number(item.value || 0).toFixed(2)}</p>
+                  </div>
+                ))}
               </div>
-              <div className="panel-control">
-                <div className="metric-grid">
-                  {staticInfo.map((item) => (
-                    <div className="metric" id={`estatico_${item.id}`} key={item.id}>
-                      <h4>{item.marker}</h4>
-                      <p>$ {Number(item.value || 0).toFixed(2)}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </PanelToolbar>
+            </div>
           </PanelBody>
 
           <PanelBody className="table-panel">
-            <PanelToolbar id="bottomTables" columns="panel-grid-table-actions" className="hide">
-              <div className="toolbar-field">
-                <input className="search_at_table" id="search" placeholder="Buscar..." />
-              </div>
-              <button id="download-pdf" className="btn-primary">PDF</button>
-              <div className="currency-actions">
-                <button id="btn_changeto_mxn" className="btn-secondary">MXN</button>
-                <button id="btn_changeto_usd" className="btn-secondary">USD</button>
-                <button id="btn_changeto_eur" className="btn-secondary">EUR</button>
-              </div>
-            </PanelToolbar>
             <div className="table-wrap">
               <CatalogAgGrid />
             </div>

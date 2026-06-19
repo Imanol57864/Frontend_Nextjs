@@ -54,6 +54,22 @@
   .panel-body + .panel-body { @apply mt-4; }
   .table-panel { @apply bg-white/70; }
   .table-wrap { @apply min-w-0; }
+  .catalog-sticky-toolbar {
+    @apply sticky z-[900] border-white/80 bg-white/90 shadow-lg ring-1 ring-ifc-border/50 backdrop-blur;
+    top: 88px;
+  }
+  .catalog-topbar {
+    @apply grid items-stretch gap-3;
+    grid-template-columns: minmax(190px, auto) minmax(280px, 1fr) minmax(390px, auto) minmax(280px, auto);
+  }
+  .catalog-primary-action { @apply h-full whitespace-nowrap; }
+  .catalog-search { @apply min-w-0; }
+  .catalog-command-cluster { @apply grid gap-2; grid-template-columns: minmax(74px, auto) minmax(248px, 1fr); }
+  .catalog-command-cluster .btn-primary,
+  .catalog-command-cluster .btn-secondary,
+  .catalog-primary-action,
+  .catalog-search .search_at_table { @apply min-h-12; }
+  .catalog-rate-strip { @apply grid gap-2; grid-template-columns: repeat(2, minmax(130px, 1fr)); }
   .page-intro { @apply mb-5; }
   .notice-card { @apply m-0 text-sm leading-6 text-ifc-muted shadow-none; }
   .analysis-id-card { @apply m-0 grid min-h-20 place-items-center text-2xl font-bold text-ifc-green shadow-none; }
@@ -103,12 +119,15 @@
   .metric { @apply rounded-lg border border-ifc-border bg-ifc-subtle p-3 text-center; }
   .metric h4 { @apply text-xs font-semibold uppercase tracking-wide text-ifc-muted; }
   .metric p { @apply mt-1 text-lg font-bold text-ifc-green; }
+  .catalog-rate-strip .metric { @apply grid min-h-12 grid-cols-[auto_auto] items-center justify-between gap-2 px-3 py-2 text-left; }
+  .catalog-rate-strip .metric h4 { @apply text-[11px]; }
+  .catalog-rate-strip .metric p { @apply mt-0 whitespace-nowrap text-base; }
   .currency-metric { @apply grid h-full place-items-center; }
 
   #table.ag-theme-quartz {
     @apply w-full overflow-hidden rounded-lg border border-ifc-border bg-white shadow-sm;
-    height: min(72vh, 820px);
-    min-height: 520px;
+    height: auto;
+    min-height: 0;
     --ag-font-family: "Inter", "Segoe UI", Arial, sans-serif;
     --ag-font-size: 14px;
     --ag-border-color: theme(colors.ifc-border);
@@ -122,6 +141,20 @@
   .ag-theme-quartz .ag-cell-wrap-text { @apply items-start py-2.5 leading-snug; }
   .ag-theme-quartz .ag-paging-panel { @apply text-sm text-ifc-muted; }
 
+  .description-box { @apply w-full min-w-0; }
+  .description-toolbar { @apply mb-1 flex items-center justify-end gap-2; }
+  .description-actions { @apply flex shrink-0 items-center gap-2; }
+  .description-link { @apply border-0 bg-transparent p-0 text-[12px] font-bold text-ifc-green underline-offset-2 hover:text-ifc-green-light hover:underline; }
+  .description-content { @apply relative overflow-hidden; }
+  .description-box.is-compact .description-content { max-height: 92px; }
+  .description-box.is-compact .description-content::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 32px;
+    background: linear-gradient(180deg, rgba(255,255,255,0), #fff 86%);
+    pointer-events: none;
+  }
   .desc-text { @apply mb-1 overflow-hidden text-left text-[0.9rem] leading-snug; overflow-wrap: break-word; white-space: normal; }
   .desc-card { @apply rounded-lg border border-ifc-border bg-white p-2 shadow-sm; }
 
@@ -165,6 +198,8 @@
   @media (max-width: 960px) {
     .grid_01, .grid_02, .grid_03, .panel-grid-2, .panel-grid-3, .panel-grid-catalog, .panel-grid-info, .panel-grid-table-actions { grid-template-columns: 1fr 1fr; }
     .grid_01 > .card:first-child, .grid_02 > .card:first-child, .grid_03 > .toolbar-field, .panel-grid-catalog > .panel-control:first-child, .panel-grid-info > .panel-control:first-child, .panel-grid-table-actions > .toolbar-field { grid-column: 1 / -1; }
+    .catalog-topbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .catalog-search, .catalog-rate-strip { grid-column: 1 / -1; }
   }
 
   @media (max-width: 760px) {
@@ -173,7 +208,11 @@
     .top-bar-grid { @apply w-full justify-between; }
     .user-info { max-width: calc(100vw - 132px); }
     .dashboard-grid, .grid_01, .grid_02, .grid_03, .panel-grid-2, .panel-grid-3, .panel-grid-catalog, .panel-grid-info, .panel-grid-table-actions { grid-template-columns: 1fr; }
-    #table.ag-theme-quartz { min-height: 480px; }
+    #table.ag-theme-quartz { min-height: 0; }
+    .catalog-sticky-toolbar { top: 156px; }
+    .catalog-topbar, .catalog-command-cluster, .catalog-rate-strip { grid-template-columns: 1fr; }
+    .catalog-search, .catalog-rate-strip { grid-column: auto; }
+    .catalog-rate-strip .metric { grid-template-columns: 1fr auto; }
   }
 
   @media (max-width: 480px) {
@@ -190,6 +229,3 @@
   80% { transform: translateY(-140px); }
   100% { transform: translateY(-140px); }
 }
-
-
-

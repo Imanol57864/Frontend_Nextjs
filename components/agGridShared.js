@@ -10,7 +10,7 @@ export const DEFAULT_GRID_OPTIONS = {
   rowData: [],
   theme: "legacy",
   pagination: true,
-  paginationPageSize: 24,
+  paginationPageSize: 50,
   paginationPageSizeSelector: false,
   animateRows: true,
   defaultColDef: {
