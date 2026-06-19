@@ -25,7 +25,7 @@ export default async function LaboratoriesPage() {
             <button id="add-lab" className="btn-primary">
               A&ntilde;adir laboratorio
             </button>
-            <BackToDashboard label="Tablero principal" />
+            <BackToDashboard label="Tablero análisis" />
           </PanelToolbar>
           <div className="table-wrap">
             <LaboratoriesAgGrid />

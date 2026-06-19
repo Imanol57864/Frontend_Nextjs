@@ -26,11 +26,11 @@ export default async function CatalogPage() {
           <PanelBody className="catalog-sticky-toolbar">
             <div className="catalog-topbar">
               <Link id="getLabView_btn" href="/main_catalog/laboratories" className="btn-primary catalog-primary-action">
-                Gestionar Laboratorios
+                Tablero Laboratorios
               </Link>
 
               <div className="toolbar-field catalog-search">
-                <input className="search_at_table" id="search" placeholder="Busqueda universal de cualquier palabra" />
+                <input className="search_at_table" id="search" placeholder="Búsqueda universal de cualquier palabra" />
               </div>
 
               <div className="catalog-command-cluster">

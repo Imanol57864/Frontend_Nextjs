@@ -1,4 +1,14 @@
-﻿A. Total beatdown de tablero de laboratorios
+﻿## Done
+* [X] Los análisis se borran en modo LIVE.
+* [ ] Los análisis se crean en modo LIVE.
+No recibe nada, no activa ningun console.log(test)
+
+
+
+- Eliminar análisis no borra sus archivos de la bucket cuando es called desde eliminar laboratorio madre... pues claro, solo responden al cascade de laboratorio, no al cascade de la row que indica el path de la bucket... Eso es sql mijo
+
+
+A. Total beatdown de tablero de laboratorios
 - Actualización en tiempo real
 
 B. Brainstorm una mejor UX de analisis, piensa sin limites

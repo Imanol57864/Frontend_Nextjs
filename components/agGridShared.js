@@ -9,6 +9,7 @@ let modulesRegistered = false;
 export const DEFAULT_GRID_OPTIONS = {
   rowData: [],
   theme: "legacy",
+  domLayout: "autoHeight",
   pagination: true,
   paginationPageSize: 50,
   paginationPageSizeSelector: false,
@@ -160,7 +161,6 @@ export async function readJsonResponse(response) {
   if (data.message) alert(data.message);
   return { ok: true, data };
 }
-
 
 
 

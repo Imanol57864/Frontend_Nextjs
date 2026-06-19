@@ -36,11 +36,10 @@ export default function CatalogAgGrid() {
 
   const apiRef = useAgGrid(gridRef, () => ({
     ...DEFAULT_GRID_OPTIONS,
-    domLayout: "autoHeight",
     getRowId: (params) => String(params.data.id_analisis),
     columnDefs: [
-      { headerName: "Laboratorio", field: "id_catLabos", width: 140, pinned: 'left' },
       { headerName: "Código 2026", field: "id_analisis", editable: true, width: 140, cellEditor: "agTextCellEditor", pinned: 'left'},
+      { headerName: "Laboratorio", field: "id_catLabos", width: 140, },
       { headerName: "Descripción", field: "descripcion", cellRenderer: descriptionRenderer, width: 430, autoHeight: true, wrapText: true, sortable: false },
       { headerName: "Cantidad", field: "y_cantidad", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
       { headerName: "Precio", field: "y_precio", width: 140, valueFormatter: (params) => currencyFormatter(params, divisaBaseRef, divisaDestinoRef) },
@@ -467,7 +466,6 @@ async function exportPdf(api) {
   });
   doc.save("data.pdf");
 }
-
 
 
 

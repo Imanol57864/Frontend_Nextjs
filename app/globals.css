@@ -146,7 +146,7 @@
   .description-actions { @apply flex shrink-0 items-center gap-2; }
   .description-link { @apply border-0 bg-transparent p-0 text-[12px] font-bold text-ifc-green underline-offset-2 hover:text-ifc-green-light hover:underline; }
   .description-content { @apply relative overflow-hidden; }
-  .description-box.is-compact .description-content { max-height: 92px; }
+  .description-box.is-compact .description-content { max-height: 63px; }
   .description-box.is-compact .description-content::after {
     content: "";
     position: absolute;
@@ -195,11 +195,37 @@
   .error-box { @apply mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-800; }
   .login-footer { @apply mt-6 text-center text-xs text-ifc-muted; }
 
+  @media (min-width: 761px) and (max-width: 1180px) {
+    .catalog-sticky-toolbar { @apply p-3; }
+    .catalog-topbar {
+      grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.2fr);
+      grid-template-areas:
+        "primary search"
+        "commands rates";
+    }
+    .catalog-primary-action { grid-area: primary; }
+    .catalog-search { grid-area: search; }
+    .catalog-command-cluster {
+      grid-area: commands;
+      grid-template-columns: minmax(64px, auto) minmax(0, 1fr);
+    }
+    .catalog-rate-strip {
+      grid-area: rates;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .catalog-command-cluster .btn-primary,
+    .catalog-command-cluster .btn-secondary,
+    .catalog-primary-action,
+    .catalog-search .search_at_table,
+    .catalog-rate-strip .metric { @apply min-h-11; }
+    .catalog-rate-strip .metric { @apply px-3 py-1.5; }
+    .catalog-rate-strip .metric p { @apply text-sm; }
+    .catalog-rate-strip .metric h4 { @apply text-[10px]; }
+  }
+
   @media (max-width: 960px) {
     .grid_01, .grid_02, .grid_03, .panel-grid-2, .panel-grid-3, .panel-grid-catalog, .panel-grid-info, .panel-grid-table-actions { grid-template-columns: 1fr 1fr; }
     .grid_01 > .card:first-child, .grid_02 > .card:first-child, .grid_03 > .toolbar-field, .panel-grid-catalog > .panel-control:first-child, .panel-grid-info > .panel-control:first-child, .panel-grid-table-actions > .toolbar-field { grid-column: 1 / -1; }
-    .catalog-topbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    .catalog-search, .catalog-rate-strip { grid-column: 1 / -1; }
   }
 
   @media (max-width: 760px) {
@@ -213,6 +239,42 @@
     .catalog-topbar, .catalog-command-cluster, .catalog-rate-strip { grid-template-columns: 1fr; }
     .catalog-search, .catalog-rate-strip { grid-column: auto; }
     .catalog-rate-strip .metric { grid-template-columns: 1fr auto; }
+  }
+
+  @media (min-width: 481px) and (max-width: 760px) {
+    .catalog-sticky-toolbar { @apply p-3; }
+    .catalog-topbar {
+      @apply gap-2;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        "search search"
+        "primary commands"
+        "rates rates";
+    }
+    .catalog-primary-action { grid-area: primary; }
+    .catalog-search { grid-area: search; }
+    .catalog-command-cluster {
+      grid-area: commands;
+      grid-template-columns: minmax(52px, auto) minmax(0, 1fr);
+    }
+    .catalog-rate-strip {
+      grid-area: rates;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .catalog-command-cluster,
+    .currency-actions,
+    .catalog-rate-strip { @apply gap-1.5; }
+    .catalog-command-cluster .btn-primary,
+    .catalog-command-cluster .btn-secondary,
+    .catalog-primary-action,
+    .catalog-search .search_at_table,
+    .catalog-rate-strip .metric { @apply min-h-10; }
+    .catalog-primary-action,
+    .catalog-command-cluster .btn-primary,
+    .catalog-command-cluster .btn-secondary { @apply px-2.5 py-1.5 text-xs; }
+    .catalog-rate-strip .metric { @apply px-2.5 py-1.5; grid-template-columns: auto auto; }
+    .catalog-rate-strip .metric h4 { @apply text-[10px]; }
+    .catalog-rate-strip .metric p { @apply text-sm; }
   }
 
   @media (max-width: 480px) {
