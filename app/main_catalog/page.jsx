@@ -9,7 +9,7 @@ import CatalogAgGrid from "@/components/LazyCatalogAgGrid";
 import { Panel, PanelBody, PanelToolbar } from "@/components/Panel";
 
 export const metadata = {
-  title: "IFC | Tablero general de analisis y reportes"
+  title: "IFC | Análisis"
 };
 
 export default async function CatalogPage() {

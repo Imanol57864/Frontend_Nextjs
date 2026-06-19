@@ -74,6 +74,8 @@ export function setRows(api, rows) {
 export function applyRealtimeRowEvent({ api, rowsRef, data, idField, reload }) {
   if (!api || !data?.type || !data.id) return reload();
 
+  console.log("TEST_01!!", data); // TO DO
+
   try {
     if (data.type === "INSERT") {
       const incomingId = data.new_data?.[idField];
