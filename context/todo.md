@@ -1,9 +1,34 @@
-﻿1. Los cambios de la tabla de analisis si llegan, pero no se actualizan en tiempo real.
+﻿A. Total beatdown de tablero de laboratorios
+
+B. Brainstorm una mejor UX de analisis, piensa sin limites
+
+
+1. Los cambios de la tabla de analisis si llegan, pero no se actualizan en tiempo real.
 2. Crear un analisis lanza un error, es por los nombres de los archivos
 
 
 
+Tablero de archivos para laboratorios
 
+- Ver archivos de acreditación de lab, columna de “valido hasta”
+- Staticly, indicar que laboratorios están con acreditación activa hasta el día de hoy.
+Columna de Costo está bien (yes)
+
+Columna de Precio esa si formatearla
+
+- Formatear toda la columna
+- Formatear en estilo de excepciones, que seleccione la moneda según
+- Botón de interés anual
+    - Los interés está definidios desde que “nace” el analisis
+        - Coloca un selector de año para mostrar el precio en el pdf
+
+Columnas Costo, factor,e envio utilidad en MXN
+
+Precio ES EXTERNO, por eso en moneda destino y formateable
+
+→ Botón de descargar EXCEL para Bind
+
+- Cuando ingresa una persona, saca a la otra si ingresa las mismas credenciales
 
 
 
