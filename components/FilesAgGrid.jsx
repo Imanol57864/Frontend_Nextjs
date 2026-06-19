@@ -54,12 +54,16 @@ export default function FilesAgGrid({ idAnalisis }) {
     if (!idAnalisis) return alert("Error. ID can not be empty.");
     window.activateLoadScreen?.();
 
-    const result = await postJson("/files/get-analisis-filesdata", { id_analisis: idAnalisis });
-    if (!result.ok) return false;
+    try {
+      const result = await postJson("/files/get-analisis-filesdata", { id_analisis: idAnalisis });
+      if (!result.ok) return false;
 
-    rowsRef.current = result.data.data || [];
-    setRows(apiRef.current, rowsRef.current);
-    return true;
+      rowsRef.current = result.data.data || [];
+      setRows(apiRef.current, rowsRef.current);
+      return true;
+    } finally {
+      window.deactivateLoadScreen?.();
+    }
   }
 
   useEffect(() => {
@@ -91,21 +95,25 @@ export default function FilesAgGrid({ idAnalisis }) {
       if (!confirmacion) return false;
       window.activateLoadScreen?.();
 
-      const fileInput = document.getElementById("file_input");
-      const file = fileInput?.files?.[0];
-      if (!file) return (alert("No se envió ningún archivo."), fileInput && (fileInput.value = ""));
+      try {
+        const fileInput = document.getElementById("file_input");
+        const file = fileInput?.files?.[0];
+        if (!file) return (alert("No se envió ningún archivo."), fileInput && (fileInput.value = ""));
 
-      const exists = rowsRef.current.some((row) => row.nombre === file.name);
-      if (exists) return (alert("Un archivo ya tiene ese nombre para este análisis."), fileInput.value = "");
+        const exists = rowsRef.current.some((row) => row.nombre === file.name);
+        if (exists) return (alert("Un archivo ya tiene ese nombre para este análisis."), fileInput.value = "");
 
-      const formData = new FormData();
-      formData.append(FILE_FIELD, file);
-      formData.append("id_analisis", idAnalisis);
-      const response = await fetch("/files/uploadfile", { method: "POST", body: formData });
-      const result = await readJsonResponse(response);
-      fileInput.value = "";
-      await loadFiles();
-      if (result.ok && !result.data.message) alert("Se añadió el archivo con éxito.");
+        const formData = new FormData();
+        formData.append(FILE_FIELD, file);
+        formData.append("id_analisis", idAnalisis);
+        const response = await fetch("/files/uploadfile", { method: "POST", body: formData });
+        const result = await readJsonResponse(response);
+        fileInput.value = "";
+        await loadFiles();
+        if (result.ok && !result.data.message) alert("Se añadió el archivo con éxito.");
+      } finally {
+        window.deactivateLoadScreen?.();
+      }
     };
 
     addButton?.addEventListener("click", onClick);
@@ -150,9 +158,13 @@ function deleteRenderer(params) {
     if (!confirmacion) return false;
     window.activateLoadScreen?.();
 
-    const result = await postJson("/files/removefile", { filename: nombreArchivo, id_analisis: idAnalisis });
-    await params.context.reload();
-    if (result.ok && !result.data.message) alert("Se eliminó el archivo con éxito.");
+    try {
+      const result = await postJson("/files/removefile", { filename: nombreArchivo, id_analisis: idAnalisis });
+      await params.context.reload();
+      if (result.ok && !result.data.message) alert("Se eliminó el archivo con éxito.");
+    } finally {
+      window.deactivateLoadScreen?.();
+    }
   }, "danger");
 }
 

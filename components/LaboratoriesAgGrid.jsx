@@ -56,11 +56,15 @@ export default function LaboratoriesAgGrid() {
 
   async function loadLabs() {
     window.activateLoadScreen?.();
-    const result = await postJson("/laboratories");
-    if (!result.ok) return false;
-    rowsRef.current = result.data.data || [];
-    setRows(apiRef.current, rowsRef.current);
-    return true;
+    try {
+      const result = await postJson("/laboratories");
+      if (!result.ok) return false;
+      rowsRef.current = result.data.data || [];
+      setRows(apiRef.current, rowsRef.current);
+      return true;
+    } finally {
+      window.deactivateLoadScreen?.();
+    }
   }
 
   useEffect(() => {
@@ -80,8 +84,12 @@ export default function LaboratoriesAgGrid() {
     const addButton = document.getElementById("add-lab");
     const onClick = async () => {
       window.activateLoadScreen?.();
-      const result = await postJson("/laboratories/create");
-      if (result.ok && !result.data.message) alert(`Se creó el laboratorio ${result.data.nuevo} con éxito.`);
+      try {
+        const result = await postJson("/laboratories/create");
+        if (result.ok && !result.data.message) alert(`Se creó el laboratorio ${result.data.nuevo} con éxito.`);
+      } finally {
+        window.deactivateLoadScreen?.();
+      }
     };
     addButton?.addEventListener("click", onClick);
     return () => addButton?.removeEventListener("click", onClick);
@@ -133,15 +141,19 @@ function actionsRenderer(params) {
     if (!confirmacion) return (resetUI(), false);
     window.activateLoadScreen?.();
 
-    const formData = new FormData();
-    formData.append(FILE_FIELD, fileInput.files[0]);
-    formData.append("labname", row.nombre_lab);
-    formData.append("a_code", codeInput.value);
-    const response = await fetch("/createanalisis", { method: "POST", body: formData });
-    const result = await readJsonResponse(response);
-    await params.context.reload();
-    resetUI();
-    if (result.ok && !result.data.message) alert("Se creó el análisis con éxito.");
+    try {
+      const formData = new FormData();
+      formData.append(FILE_FIELD, fileInput.files[0]);
+      formData.append("labname", row.nombre_lab);
+      formData.append("a_code", codeInput.value);
+      const response = await fetch("/createanalisis", { method: "POST", body: formData });
+      const result = await readJsonResponse(response);
+      await params.context.reload();
+      if (result.ok && !result.data.message) alert("Se creó el análisis con éxito.");
+    } finally {
+      resetUI();
+      window.deactivateLoadScreen?.();
+    }
   }));
 
   wrapper.appendChild(makeButton("Eliminar", async () => {
@@ -149,8 +161,12 @@ function actionsRenderer(params) {
     if (!confirmacion) return false;
     window.activateLoadScreen?.();
 
-    const result = await postJson("/laboratories/delete", { labName: row.nombre_lab });
-    if (result.ok && !result.data.message) alert("Se eliminó el laboratorio con éxito.");
+    try {
+      const result = await postJson("/laboratories/delete", { labName: row.nombre_lab });
+      if (result.ok && !result.data.message) alert("Se eliminó el laboratorio con éxito.");
+    } finally {
+      window.deactivateLoadScreen?.();
+    }
   }, "danger"));
 
   return wrapper;

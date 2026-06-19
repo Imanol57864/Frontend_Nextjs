@@ -74,20 +74,11 @@ export default function PopupRuntime() {
       return resolvePopup("editdescPopup", collect);
     };
 
-    window.activateLoadScreen = (time = 3000) => {
-      const loadscreen = document.getElementById("loadscreen");
-      loadscreen?.classList.add("active");
-      window.setTimeout(() => {
-        loadscreen?.classList.remove("active");
-      }, time);
-    };
-
     return () => {
       delete window.confirmPopup;
       delete window.addFilePopup;
       delete window.createAnalisisPopup;
       delete window.editdescPopup;
-      delete window.activateLoadScreen;
     };
   }, []);
 

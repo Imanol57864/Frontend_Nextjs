@@ -1,4 +1,29 @@
-﻿export default function LoadScreen() {
+"use client";
+
+import { useEffect } from "react";
+
+export default function LoadScreen() {
+  useEffect(() => {
+    let activeRequests = 0;
+
+    window.activateLoadScreen = () => {
+      activeRequests += 1;
+      document.getElementById("loadscreen")?.classList.add("active");
+    };
+
+    window.deactivateLoadScreen = () => {
+      activeRequests = Math.max(0, activeRequests - 1);
+      if (activeRequests === 0) {
+        document.getElementById("loadscreen")?.classList.remove("active");
+      }
+    };
+
+    return () => {
+      delete window.activateLoadScreen;
+      delete window.deactivateLoadScreen;
+    };
+  }, []);
+
   return (
     <div id="loadscreen" className="loading-overlay">
       <div className="lab-loader">

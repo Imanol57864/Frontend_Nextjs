@@ -69,14 +69,18 @@ export default function CatalogAgGrid() {
     const labname = labnameInput || "";
     if (!labname) return false;
     window.activateLoadScreen?.();
-    selectedLabRef.current = labname;
+    try {
+      selectedLabRef.current = labname;
 
-    const result = await postJson("/load-analisis", { labname });
-    if (!result.ok) return false;
+      const result = await postJson("/load-analisis", { labname });
+      if (!result.ok) return false;
 
-    rowsRef.current = result.data.data || [];
-    setRows(apiRef.current, rowsRef.current);
-    return true;
+      rowsRef.current = result.data.data || [];
+      setRows(apiRef.current, rowsRef.current);
+      return true;
+    } finally {
+      window.deactivateLoadScreen?.();
+    }
   }
 
   function closeSources() {
@@ -193,10 +197,14 @@ export default function CatalogAgGrid() {
     return divisa;
   }
   function setNewDivisa(divisa, base) {
-    window.activateLoadScreen?.(666);
-    divisaDestinoRef.current = divisa;
-    if (base) divisaBaseRef.current = base;
-    apiRef.current?.refreshCells({ force: true });
+    window.activateLoadScreen?.();
+    try {
+      divisaDestinoRef.current = divisa;
+      if (base) divisaBaseRef.current = base;
+      apiRef.current?.refreshCells({ force: true });
+    } finally {
+      window.deactivateLoadScreen?.();
+    }
   }
 
   useEffect(() => {
@@ -266,13 +274,18 @@ export default function CatalogAgGrid() {
     const click = (event) => {
       const item = event.target.closest(".option-item");
       if (item) {
-        optionsList.classList.add("hide");
-        searchInput.value = "";
-        optionsList.querySelectorAll(".option-item").forEach((candidate) => {
-          candidate.classList.remove("hide", "hide-already-selected");
-        });
-        item.classList.add("hide-already-selected");
-        bottomTables?.classList.remove("hide");
+        window.activateLoadScreen?.();
+        try {
+          optionsList.classList.add("hide");
+          searchInput.value = "";
+          optionsList.querySelectorAll(".option-item").forEach((candidate) => {
+            candidate.classList.remove("hide", "hide-already-selected");
+          });
+          item.classList.add("hide-already-selected");
+          bottomTables?.classList.remove("hide");
+        } finally {
+            window.deactivateLoadScreen?.();
+        }
       }
     };
     const outside = (event) => {
@@ -321,13 +334,17 @@ function descriptionRenderer(params) {
     if (!sendChange) return;
     window.activateLoadScreen?.();
 
-    for (const [field, value] of Object.entries(sendChange)) {
-      const ok = await sendTableChange(data.id_analisis, field, value);
-      if (!ok) return params.context.reload();
-      data[field] = value;
+    try {
+      for (const [field, value] of Object.entries(sendChange)) {
+        const ok = await sendTableChange(data.id_analisis, field, value);
+        if (!ok) return params.context.reload();
+        data[field] = value;
+      }
+      data.description_at_pdf = descriptionText(data);
+      params.api.refreshCells({ rowNodes: [params.node], force: true });
+    } finally {
+      window.deactivateLoadScreen?.();
     }
-    data.description_at_pdf = descriptionText(data);
-    params.api.refreshCells({ rowNodes: [params.node], force: true });
   });
 
   return wrapper;
@@ -372,13 +389,17 @@ function actionsRenderer(params) {
     if (!confirmacion) return false;
     window.activateLoadScreen?.();
 
-    const response = await fetch("/deleteanalisis", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id_analisis: id })
-    });
-    const result = await readJsonResponse(response);
-    if (result.ok && !result.data.message) alert("Se borró el análisis con éxito.");
+    try {
+      const response = await fetch("/deleteanalisis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_analisis: id })
+      });
+      const result = await readJsonResponse(response);
+      if (result.ok && !result.data.message) alert("Se borró el análisis con éxito.");
+    } finally {
+      window.deactivateLoadScreen?.();
+    }
   }, "danger");
 }
 
