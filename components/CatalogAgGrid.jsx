@@ -94,6 +94,7 @@ export default function CatalogAgGrid() {
       channelName: `catAnalisis`,
       table: "catAnalisis",
       onPayload: (payload) => {
+        console.log("TEST_05!!", payload)
         const data = analysisPayloadEventForLab(payload);
         if (data) handleAnalisisEvent(data);
       }
@@ -101,6 +102,7 @@ export default function CatalogAgGrid() {
   }
 
   function handleAnalisisEvent(data) {
+    console.log("TEST3!!", data)
     return applyRealtimeRowEvent({
       api: apiRef.current,
       rowsRef,

@@ -4,7 +4,6 @@
 No recibe nada, no activa ningun console.log(test)
 
 
-
 - Eliminar análisis no borra sus archivos de la bucket cuando es called desde eliminar laboratorio madre... pues claro, solo responden al cascade de laboratorio, no al cascade de la row que indica el path de la bucket... Eso es sql mijo
 
 

@@ -44,7 +44,7 @@ export function useAgGrid(gridRef, optionsFactory, dependencies = []) {
       apiRef.current?.destroy();
       apiRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 
   return apiRef;
@@ -73,6 +73,8 @@ export function setRows(api, rows) {
 }
 
 export function applyRealtimeRowEvent({ api, rowsRef, data, idField, reload }) {
+  console.log("TEST_04!!", data); // TO DO
+
   if (!api || !data?.type || !data.id) return reload();
 
   console.log("TEST_01!!", data); // TO DO
