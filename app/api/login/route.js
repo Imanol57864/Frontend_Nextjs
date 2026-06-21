@@ -23,7 +23,7 @@ export async function POST(request) {
         }
       } else {
         const response = NextResponse.redirect(
-          new URL("/main_catalog/laboratories", request.url),
+          new URL("/main_catalog/laboratories", process.env.NEXT_PUBLIC_SUPABASE_URL),
           { status: 303 }
         );
         setAuthCookies(response, data.session);
@@ -40,7 +40,7 @@ export async function POST(request) {
 
 function redirectToLogin(request, message) {
   return NextResponse.redirect(
-    new URL(`/login?error=${encodeURIComponent(message)}`, request.url),
+    new URL(`/login?error=${encodeURIComponent(message)}`, process.env.NEXT_PUBLIC_SUPABASE_URL),
     { status: 303 }
   );
 }
