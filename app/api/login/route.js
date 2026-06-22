@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSupabaseClient } from "@/lib/supabase";
 import { setAuthCookies } from "@/lib/auth";
+import { getPublicUrl } from "@/lib/requestUrl";
 
 export async function POST(request) {
   try {
@@ -22,18 +23,8 @@ export async function POST(request) {
           message = error;
         }
       } else {
-        console.log({
-          url: request.url,
-          host: request.headers.get("host"),
-          xfh: request.headers.get("x-forwarded-host"),
-          xfp: request.headers.get("x-forwarded-proto"),
-        });
-        const host = request.headers.get("host");
-        const proto = request.headers.get("x-forwarded-proto") ?? "http";
-        const baseUrl = `${proto}://${host}`;
-        ///
         const response = NextResponse.redirect(
-          new URL("/main_catalog/laboratories", baseUrl),
+          getPublicUrl(request, "/main_catalog/laboratories"),
           { status: 303 }
         );
         setAuthCookies(response, data.session);
@@ -49,19 +40,8 @@ export async function POST(request) {
 }
 
 function redirectToLogin(request, message) {
-  console.log({
-    url: request.url,
-    host: request.headers.get("host"),
-    xfh: request.headers.get("x-forwarded-host"),
-    xfp: request.headers.get("x-forwarded-proto"),
-  });
-  const host = request.headers.get("host");
-  const proto = request.headers.get("x-forwarded-proto") ?? "http";
-  const baseUrl = `${proto}://${host}`;
-  console.log(baseUrl);
-  ///
   return NextResponse.redirect(
-    new URL(`/login?error=${encodeURIComponent(message)}`, baseUrl),
+    getPublicUrl(request, `/login?error=${encodeURIComponent(message)}`),
     { status: 303 }
   );
 }
