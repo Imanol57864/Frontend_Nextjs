@@ -12,7 +12,7 @@ export async function GET(request) {
   const baseUrl = `${proto}://${host}`;
   console.log(baseUrl);
   ///
-  const response = NextResponse.redirect(new URL("/login", request.url), { status: 303 });
+  const response = NextResponse.redirect(new URL("/login", baseUrl), { status: 303 });
   response.cookies.delete("access_token");
   response.cookies.delete("refresh_token");
   return response;
