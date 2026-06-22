@@ -4,6 +4,8 @@ import { setAuthCookies } from "@/lib/auth";
 import { getPublicUrl } from "@/lib/requestUrl";
 
 export async function POST(request) {
+  const expectsJson = (request.headers.get("content-type") || "").includes("application/json");
+
   try {
     const { email, password } = await readLoginPayload(request);
     let message = null;
@@ -23,26 +25,35 @@ export async function POST(request) {
           message = error;
         }
       } else {
-        const response = NextResponse.redirect(
-          getPublicUrl(request, "/main_catalog/laboratories"),
-          { status: 303 }
-        );
+        const redirectTo = "/main_catalog/laboratories";
+        const response = expectsJson
+          ? NextResponse.json({ ok: true, redirectTo })
+          : NextResponse.redirect(getPublicUrl(request, redirectTo), { status: 303 });
         setAuthCookies(response, data.session);
         response.headers.set("Cache-Control", "no-store");
         return response;
       }
     }
 
-    return redirectToLogin(request, message);
+    return loginFailure(request, message, expectsJson);
   } catch (error) {
     console.error("Login route failed:", error);
-    return redirectToLogin(request, "El ingreso a la plataforma falló, favor de reportarlo.");
+    return loginFailure(request, "El ingreso a la plataforma falló, favor de reportarlo.", expectsJson);
   }
 }
 
-function redirectToLogin(request, message) {
+function loginFailure(request, message, expectsJson) {
+  const text = typeof message === "string" ? message : message?.message || "No fue posible iniciar sesión.";
+
+  if (expectsJson) {
+    return NextResponse.json(
+      { ok: false, message: text },
+      { status: 401, headers: { "Cache-Control": "no-store" } }
+    );
+  }
+
   return NextResponse.redirect(
-    getPublicUrl(request, `/login?error=${encodeURIComponent(message)}`),
+    getPublicUrl(request, `/login?error=${encodeURIComponent(text)}`),
     { status: 303 }
   );
 }
