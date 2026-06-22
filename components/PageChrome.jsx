@@ -1,4 +1,3 @@
-﻿import Link from "next/link";
 import PopupRuntime from "./PopupRuntime";
 import Image from "next/image";
 
@@ -22,9 +21,11 @@ export default function PageChrome({ userEmail, children }) {
       </div>
         <div className="top-bar-grid">
           <div className="user-info">{userEmail}</div>
-          <Link id="logout-btn" href="/logout" className="logout-btn">
-            Logout
-          </Link>
+          <form action="/api/logout" method="POST">
+            <button id="logout-btn" type="submit" className="logout-btn">
+              Logout
+            </button>
+          </form>
         </div>
       </header>
       <main className="app-main">{children}</main>

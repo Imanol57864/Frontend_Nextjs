@@ -7,7 +7,6 @@
   },
   async rewrites() {
     return [
-      { source: "/logout", destination: "/api/logout" },
       { source: "/labinfo", destination: "/api/labinfo" },
       { source: "/files/get-analisis-filesdata", destination: "/api/files/get-analisis-filesdata" },
       { source: "/files/uploadfile", destination: "/api/files/uploadfile" },
