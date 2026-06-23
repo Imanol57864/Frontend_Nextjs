@@ -121,10 +121,10 @@ export function applyRealtimeRowEvent({ api, rowsRef, data, idField, reload }) {
   }
 }
 
-export function subscribeToTableChanges({ channelName, table, filter, onPayload }) {
+export function subscribeToTableChanges({ channelName, table, onPayload }) { // filter, onPayload }) {
   const supabase = getBrowserSupabase();
   const changes = { event: "*", schema: "public", table };
-  if (filter) changes.filter = filter;
+  // if (filter) changes.filter = filter;
 
   const channel = supabase
     .channel(channelName)
