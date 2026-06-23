@@ -33,22 +33,27 @@ https://internationalfoodscontrol.duckdns.org/login
 ## Divisas
 - [x] Los divisas se editan en modo CACHÉ. 
 - [x] La divisa seleccionada se actualiza en modo LIVE según su valor en la casilla.
-- [] La columna de Costo se formate según el botón clickeado de divisa correctamente.
+- [x] La columna de Costo siempre utiliza la divisa seleccionada por el laboratorio.
 - [] La columna de Precio se formatea según el botón clickeado de divisa correctamente.
+
+- El costo SIEMPRE SERÁ LA MONEDA ELEGIDA, JAMÁS SE FORMATEA JAMÁS NADA. 
+- Con esa base, formateame todo lo demás a través de MXN, y luego mostrar el formatter
+
 ### Notas
 - Formatear toda la columna en "estilo de excepciones", que seleccionen las rows aplicables
 - Selector/Visor que indique el precio que desea mostrar según el año seleccionado. Precio desde fecha de creación del análisis + (1+var_interés * años desde creación), y editable esa cantidad de interés.
 - No eligen una divisa por laboratorio, solo formatean el precio comunicado al cliente.
 
 ## Reportes
-- [] Descarga de EXCEL para catálogo de análisis.
-- [] Descarga de PDF para catálogo de análisis.
+- [] Descarga de EXCEL de la vista actual formateada para catálogo de análisis.
+- [] Descarga de PDF de la vista actual formateada para catálogo de análisis.
 - [] [BUG] El signo de divisa no aparece al descargar PDF.
 - [] Agregar diseño profesional de la empresa.
 
 ## Sesiones
 - [] Cuando ingresa una persona, saca a la otra si ingresa las mismas credenciales.
 - [] Crear vistas para los usuarios que no son area administrativa.
+- Aumentar la duración de los tokens, expiran o no se refrezcan correctamente.
 
 ## Notas del desarrollador
 - LIVE funciona con realtime enabled, RLS activado y sin polizas.

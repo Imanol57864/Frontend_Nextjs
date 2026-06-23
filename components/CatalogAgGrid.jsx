@@ -46,12 +46,13 @@ export default function CatalogAgGrid() {
       { headerName: "Cantidad", field: "y_cantidad", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
       { headerName: "Precio", field: "y_precio", width: 140, valueFormatter: (params) => currencyFormatter(params, divisaBaseRef, divisaDestinoRef) },
       { headerName: "Categoría", field: "y_categoria", editable: true, cellEditor: "agSelectCellEditor", cellEditorParams: { values: CATEGORY_OPTIONS }, width: 220 },
-      { headerName: "Costo", field: "c_costo", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser, valueFormatter: (params) => currencyFormatter(params, divisaBaseRef, divisaDestinoRef) },
+      { headerName: "Costo", field: "c_costo", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser, valueFormatter: costCurrencyFormatter },
       { headerName: "Factor", field: "c_factor", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
       { headerName: "Envío", field: "c_envio", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser, valueFormatter: (params) => currencyFormatter(params, divisaBaseRef, divisaDestinoRef) },
       { headerName: "Utilidad", field: "c_utilidad", width: 140, valueFormatter: (params) => currencyFormatter(params, divisaBaseRef, divisaDestinoRef) },
       { headerName: "Acciones", cellRenderer: actionsRenderer, width: 110, sortable: false, filter: false },
       { headerName: "Archivos", cellRenderer: filesViewRenderer, width: 140, sortable: false, filter: false },
+      { headerName: "Divisa", field: "catLabos.divisa_lab", hide: true },
       ...Object.keys(DESCRIPTION_FIELDS).map((field) => ({ field, hide: true }))
     ],
     context: {
@@ -408,13 +409,22 @@ function positiveRateFromInput(id) {
   return Number.isFinite(value) && value > 0 ? value : 1;
 }
 
+function costCurrencyFormatter(params) {
+  const divisa = params.data?.catLabos?.divisa_lab || "MXN";
+  return formatCurrency(params.value, divisa);
+}
+
 function currencyFormatter(params, baseRef, destinoRef) {
   const rates = currencyRates();
   const valor = Number(params.value || 0);
   const convertido = valor * rates[baseRef.current][destinoRef.current];
-  const [enteroRaw, decimal] = convertido.toFixed(2).split(".");
+  return formatCurrency(convertido, destinoRef.current);
+}
+
+function formatCurrency(value, divisa) {
+  const [enteroRaw, decimal] = Number(value || 0).toFixed(2).split(".");
   const entero = enteroRaw.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return `${destinoRef.current} $${entero}.${decimal}`;
+  return `${divisa} $${entero}.${decimal}`;
 }
 
 async function exportPdf(api) {

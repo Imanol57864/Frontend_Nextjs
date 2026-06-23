@@ -6,7 +6,7 @@ export const POST = withApiUser(async ({ request, supabase }) => {
 
   const { data, error } = await supabase
     .from("catAnalisis")
-    .select("*")
+    .select("*, catLabos(divisa_lab)")
     .order("id_analisis", { ascending: true });
 
   if (error) return jsonError();
