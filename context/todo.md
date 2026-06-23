@@ -15,8 +15,7 @@
 ## Archivos
 - [x] Los archivos se borran en modo LIVE.
 - [x] Los archivos se crean en modo LIVE.
-- [x] Los archivos se editan en modo LIVE. (Bug critico, se genera un ciclo infinito de ediciones incorrectas que causan llamadas al backend)
-
+- [x] Los archivos se editan en modo LIVE. 
 ## Divisas
 - [] No eligen una divisa por laboratorio, solo formatean el precio comunicado al cliente
 - [] Columna de Costo como base está bien, falta agregar algo
@@ -55,3 +54,6 @@
 1. Tablero de archivos para laboratorios
 2. Ver archivos de acreditación de lab, columna de “valido hasta”
 3. Staticly, indicar que laboratorios están con acreditación activa hasta el día de hoy.
+
+## Bugs
+- [x] Bug critico, se genera un ciclo infinito de ediciones incorrectas que causan llamadas al backend.
