@@ -36,8 +36,7 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] La columna de Costo siempre utiliza la divisa seleccionada por el laboratorio.
 - [x] Todas las demás columnas, deben iniciar con la divisa del laboratorio y después poder formatearse hacia la divisa indicada por el botón.
 - [x] [BUG] Al editar la tabla de análisis mientras está seleccionada una divisa no-base se borra el estado de la divisa.
-- Con esa base, formateame todo lo demás a través de MXN, y luego mostrar el formatter
-- Selector/Visor que indique el precio que desea mostrar según el año seleccionado. Precio desde fecha de creación del análisis + (1+var_interés * años desde creación), y editable esa cantidad de interés.
+- [] Selector/Visor que indique el precio que desea mostrar según el año seleccionado. Precio desde fecha de creación del análisis + (1+var_interés * años desde creación), y editable esa cantidad de interés.
 
 ## Reportes
 - [] Descarga de EXCEL de la vista actual formateada para catálogo de análisis.
@@ -48,7 +47,7 @@ https://internationalfoodscontrol.duckdns.org/login
 ## Sesiones
 - [] Cuando ingresa una persona, saca a la otra si ingresa las mismas credenciales.
 - [] Crear vistas para los usuarios que no son area administrativa.
-- Aumentar la duración de los tokens, expiran o no se refrezcan correctamente.
+- [] Aumentar la duración de los tokens, expiran o no se refrezcan correctamente.
 
 ## Notas del desarrollador
 - LIVE funciona con realtime enabled, RLS activado y sin polizas.
