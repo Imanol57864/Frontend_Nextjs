@@ -1,6 +1,5 @@
 ﻿# To Do List
 https://internationalfoodscontrol.duckdns.org/login
-17/30
 
 ## Misc
 - [x] Proxying and cookies correctly implemented for prod env.
@@ -21,7 +20,6 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] Creación cohesiva de análisis en el tablero correspondiente. 
 - [x] Solo se normaliza la palabra clave del laboratorio para el ID del análisis.
 - [] Eliminar análisis necesita una validación con contraseña de un administrador.
-- [] [BUG] Crear un analisis lanza un error, es por los nombres de los archivos (Ya existe `sanitizeFileName` y `uploadAnalysisFile`.)
 - [] [BUG] La búsqueda universal en el tablero de análisis no busca a en la descripción porque es información que no existe en la celda. Cambialo para que búsque también en las celdas hidden, porque allí si se encuentra la información.
 
 ## Archivos
@@ -29,6 +27,8 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] Los archivos se crean en modo LIVE.
 - [x] Los archivos se editan en modo LIVE. 
 - [x] [BUG] Se genera un ciclo infinito de ediciones incorrectas que causan llamadas al backend.
+- [x] [BUG] La subida de un archivo con nombres que incluyen "ñ" y "acentos" hace que se cree un error. Esto afecta hasta el crear un análisis. (Fixed at `sanitizeFileName`).
+- [x] Los nombres de los archivos se normalizan antes de subirlos a la base de datos. (Se eliminan acentos, tildes, y Ñs).
 
 ## Divisas
 - [x] Los divisas se editan en modo CACHÉ. 
