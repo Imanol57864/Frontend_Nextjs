@@ -15,7 +15,7 @@
 ## Archivos
 - [x] Los archivos se borran en modo LIVE.
 - [x] Los archivos se crean en modo LIVE.
-- [] Los archivos se editan en modo LIVE. (Bug critico, se genera un ciclo infinito de ediciones incorrectas que causan llamadas al backend)
+- [x] Los archivos se editan en modo LIVE. (Bug critico, se genera un ciclo infinito de ediciones incorrectas que causan llamadas al backend)
 
 ## Divisas
 - [] No eligen una divisa por laboratorio, solo formatean el precio comunicado al cliente

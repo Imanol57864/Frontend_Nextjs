@@ -167,9 +167,9 @@ export async function postJson(url, body = {}) {
   return readJsonResponse(response);
 }
 
-export async function sendCellChange(url, rowId, field, newValue, isBlocked = (data) => !data.ok) {
+export async function sendCellChange(url, rowId, field, newValue, hasError = (_data, result) => !result.ok) {
   const result = await postJson(url, { rowId, field, newValue });
-  return !isBlocked(result.data, result);
+  return !hasError(result.data, result);
 }
 
 export async function readJsonResponse(response) {
