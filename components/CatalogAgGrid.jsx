@@ -247,6 +247,13 @@ function descriptionText(data) {
   return Object.entries(DESCRIPTION_FIELDS).map(([field, label]) => `${label}${data[field] || def}`).join("\n");
 }
 
+function pdfDescriptionText(data) {
+  const lines = Object.entries(DESCRIPTION_FIELDS)
+    .filter(([field]) => String(data[field] ?? "").trim())
+    .map(([field, label]) => `${label}${String(data[field]).trim()}`);
+  return lines.length ? lines.join("\n") : "Sin descripción";
+}
+
 function descriptionRenderer(params) {
   const wrapper = document.createElement("div");
   const data = params.data;
@@ -480,10 +487,10 @@ async function exportPdf(api, currencyCacheRef, selectedCurrency) {
     const row = node.data;
     rows.push([
       row.id_analisis,
-      descriptionText(row),
+      pdfDescriptionText(row),
       row.y_cantidad ?? "",
       currencyFormatter({ value: row.y_precio, data: row }, currencyCacheRef, destinoRef),
-      row.y_categoria ?? "",
+      String(row.y_categoria || "Sin categoría").trim(),
       costCurrencyFormatter({ value: row.c_costo, data: row }, currencyCacheRef),
       row.c_factor ?? "",
       currencyFormatter({ value: row.c_envio, data: row }, currencyCacheRef, destinoRef),
@@ -498,10 +505,20 @@ async function exportPdf(api, currencyCacheRef, selectedCurrency) {
     startY: 26,
     head: [["Código", "Descripción", "Cantidad", "Precio", "Categoría", "Costo", "Factor", "Envío", "Utilidad"]],
     body: rows,
-    styles: { fontSize: 8, cellPadding: 3, overflow: "linebreak", valign: "top" },
+    styles: { fontSize: 7.5, cellPadding: 2, overflow: "linebreak", valign: "top" },
     headStyles: { fillColor: [15, 81, 50], textColor: 255, fontStyle: "bold", halign: "center" },
     alternateRowStyles: { fillColor: [245, 245, 245] },
-    columnStyles: { 1: { cellWidth: 90 } }
+    columnStyles: {
+      0: { cellWidth: 22 },
+      1: { cellWidth: 82 },
+      2: { cellWidth: 16, halign: "center" },
+      3: { cellWidth: 24, halign: "right" },
+      4: { cellWidth: 30 },
+      5: { cellWidth: 24, halign: "right" },
+      6: { cellWidth: 16, halign: "center" },
+      7: { cellWidth: 24, halign: "right" },
+      8: { cellWidth: 24, halign: "right" }
+    }
   });
   doc.save("data.pdf");
 }
