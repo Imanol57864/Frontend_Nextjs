@@ -53,19 +53,39 @@ export default function PopupRuntime() {
 
     window.addFilePopup = () => resolvePopup("addFilePopup");
 
-    window.createAnalisisPopup = (labname, codigoLab) => {
+    window.createAnalisisPopup = (laboratories = []) => {
       const title = document.getElementById("createAnalisisPopup-title");
       const prefix = document.getElementById("createAnalisisPopup-codigo_lab");
+      const labSelect = document.getElementById("createAnalisisPopup-lab");
       const fileInput = document.getElementById("file_input");
       const codeInput = document.getElementById("a_code_input");
-      if (title) title.textContent = `Nuevo análisis para ${labname}`;
-      if (prefix) prefix.textContent = codigoLab;
-      if (codeInput) codeInput.oninput = (event) => { event.target.value = event.target.value.replace(/\D/g, ""); };
+      const labsByName = new Map(laboratories.map((lab) => [lab.nombre_lab, lab]));
+
+      if (title) title.textContent = "Nuevo análisis";
+      if (prefix) prefix.textContent = "—";
+      if (labSelect) {
+        labSelect.replaceChildren(new Option("Selecciona un laboratorio", "", true, true));
+        labSelect.options[0].disabled = true;
+        laboratories.forEach((lab) => labSelect.add(new Option(lab.nombre_lab, lab.nombre_lab)));
+        labSelect.onchange = () => {
+          const lab = labsByName.get(labSelect.value);
+          if (title) title.textContent = lab ? `Nuevo análisis para ${lab.nombre_lab}` : "Nuevo análisis";
+          if (prefix) prefix.textContent = lab?.codigo_lab || "—";
+        };
+      }
+      // Desactivado, denega todo input diferente a número
+      // if (codeInput) codeInput.oninput = (event) => { event.target.value = event.target.value.replace(/\D/g, ""); };
+      // Este nuevo permite denegar espacios, nadie sabe como desean normalizar los id_análisis
+      if (codeInput) codeInput.oninput = (event) => { event.target.value = event.target.value.replace(/\s/g, ""); };
+
 
       return resolvePopup("createAnalisisPopup", () => {
+        const lab = labsByName.get(labSelect?.value);
+        if (!lab) return alert("Selecciona un laboratorio."), false;
+        if (!lab.codigo_lab) return alert(`Necesitas establecer el código identificador de análisis para ${lab.nombre_lab}.`), false;
         if (!fileInput?.files?.[0]) return alert("Ingresa una cotización antes de crear el análisis."), false;
         if (!/^\d{3}$/.test(codeInput?.value || "")) return alert("Ingresa un código identificador de análisis válido."), false;
-        return true;
+        return { labname: lab.nombre_lab, codigoLab: lab.codigo_lab };
       });
     };
 

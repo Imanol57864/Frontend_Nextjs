@@ -10,7 +10,6 @@ import {
   applyRealtimeRowEvent,
   makeButton,
   postJson,
-  readJsonResponse,
   sendCellChange,
   setRows,
   subscribeToTableChanges,
@@ -18,7 +17,6 @@ import {
   useQuickFilter
 } from "./agGridShared";
 
-const FILE_FIELD = "analisis_file";
 const DIVISAS = ["USD", "EUR", "MXN"];
 const COBERTURAS = ["Internacional - IFC", "Nacional - IFC LABS"];
 
@@ -126,35 +124,6 @@ function actionsRenderer(params) {
   const wrapper = document.createElement("div");
   wrapper.classList.add("action-container");
   const row = params.data;
-
-  wrapper.appendChild(makeButton("Crear análisis", async () => {
-    if (!row.codigo_lab) return alert(`Necesitas establecer el código identificador de análisis para ${row.nombre_lab}.`);
-
-    const fileInput = document.getElementById("file_input");
-    const codeInput = document.getElementById("a_code_input");
-    const resetUI = () => {
-      if (fileInput) fileInput.value = "";
-      if (codeInput) codeInput.value = "";
-    };
-
-    const confirmacion = await window.createAnalisisPopup?.(row.nombre_lab, row.codigo_lab);
-    if (!confirmacion) return (resetUI(), false);
-    window.activateLoadScreen?.();
-
-    try {
-      const formData = new FormData();
-      formData.append(FILE_FIELD, fileInput.files[0]);
-      formData.append("labname", row.nombre_lab);
-      formData.append("a_code", codeInput.value);
-      const response = await fetch("/createanalisis", { method: "POST", body: formData });
-      const result = await readJsonResponse(response);
-      await params.context.reload();
-      if (result.ok && !result.data.message) alert("Se creó el análisis con éxito.");
-    } finally {
-      resetUI();
-      window.deactivateLoadScreen?.();
-    }
-  }));
 
   wrapper.appendChild(makeButton("Eliminar", async () => {
     const confirmacion = await window.confirmPopup?.(`¿Quieres borrar el laboratorio "${row.nombre_lab}"?`);

@@ -3,6 +3,7 @@ import { requirePageUser } from "@/lib/auth";
 import PageChrome from "@/components/PageChrome";
 import LoadScreen from "@/components/LoadScreen";
 import ConfirmPopup from "@/components/ConfirmPopup";
+import CreateAnalisisPopup from "@/components/CreateAnalisisPopup";
 import EditDescPopup from "@/components/EditDescPopup";
 import CatalogAgGrid from "@/components/LazyCatalogAgGrid";
 import CurrencyRateInputs from "@/components/CurrencyRateInputs";
@@ -21,9 +22,12 @@ export default async function CatalogPage() {
         <Panel>
           <PanelBody className="catalog-sticky-toolbar">
             <div className="catalog-topbar">
-              <Link id="getLabView_btn" href="/main_catalog/laboratories" className="btn-primary catalog-primary-action">
-                Tablero Laboratorios
-              </Link>
+              <div className="catalog-primary-action">
+                <button id="create-analysis" type="button" className="btn-primary">Crear análisis</button>
+                <Link id="getLabView_btn" href="/main_catalog/laboratories" className="btn-secondary">
+                  Tablero Laboratorios
+                </Link>
+              </div>
 
               <div className="toolbar-field catalog-search">
                 <input className="search_at_table" id="search" placeholder="Búsqueda universal de cualquier palabra" />
@@ -51,6 +55,7 @@ export default async function CatalogPage() {
       </PageChrome>
       <LoadScreen />
       <ConfirmPopup />
+      <CreateAnalisisPopup />
       <EditDescPopup />
     </>
   );

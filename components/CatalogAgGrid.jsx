@@ -26,6 +26,7 @@ const CATEGORY_OPTIONS = [
 ];
 
 const expandedDescriptionRows = new Set();
+const FILE_FIELD = "analisis_file";
 
 export default function CatalogAgGrid() {
   const gridRef = useRef(null);
@@ -39,7 +40,7 @@ export default function CatalogAgGrid() {
     ...DEFAULT_GRID_OPTIONS,
     getRowId: (params) => String(params.data.id_analisis),
     columnDefs: [
-      { headerName: "Código 2026", field: "id_analisis", editable: true, width: 140, cellEditor: "agTextCellEditor", pinned: 'left'},
+      { headerName: "Código 2026", field: "id_analisis", editable: false, width: 140, cellEditor: "agTextCellEditor", pinned: 'left'},
       { headerName: "Laboratorio", field: "id_catLabos", width: 140, },
       { headerName: "Descripción", field: "descripcion", cellRenderer: descriptionRenderer, width: 430, autoHeight: true, wrapText: true, sortable: false },
       { headerName: "Cantidad", field: "y_cantidad", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
@@ -173,6 +174,9 @@ export default function CatalogAgGrid() {
     const pdfButton = document.getElementById("download-pdf");
     const onPdfClick = () => exportPdf(apiRef.current);
     pdfButton?.addEventListener("click", onPdfClick);
+    const createButton = document.getElementById("create-analysis");
+    const onCreateClick = () => createAnalysis(loadAnalisis);
+    createButton?.addEventListener("click", onCreateClick);
   // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => {
       mxnButton?.removeEventListener("click", onMxnClick);
@@ -180,10 +184,52 @@ export default function CatalogAgGrid() {
       eurButton?.removeEventListener("click", onEurClick);
       window.removeEventListener(CURRENCY_RATES_CHANGED_EVENT, onRatesChanged);
       pdfButton?.removeEventListener("click", onPdfClick);
+      createButton?.removeEventListener("click", onCreateClick);
     };
   }, []);
 
   return <div ref={gridRef} id="table" className={GRID_CLASS_NAME} style={GRID_STYLE} />;
+}
+
+async function createAnalysis(reload) {
+  const fileInput = document.getElementById("file_input");
+  const codeInput = document.getElementById("a_code_input");
+  const labSelect = document.getElementById("createAnalisisPopup-lab");
+  const resetUI = () => {
+    if (fileInput) fileInput.value = "";
+    if (codeInput) codeInput.value = "";
+    if (labSelect) labSelect.value = "";
+  };
+
+  window.activateLoadScreen?.();
+  let labsResult;
+  try {
+    labsResult = await postJson("/laboratories");
+  } finally {
+    window.deactivateLoadScreen?.();
+  }
+
+  if (!labsResult?.ok) return;
+  const laboratories = labsResult.data.data || [];
+  if (!laboratories.length) return alert("Primero crea un laboratorio.");
+
+  const selection = await window.createAnalisisPopup?.(laboratories);
+  if (!selection) return (resetUI(), false);
+  window.activateLoadScreen?.();
+
+  try {
+    const formData = new FormData();
+    formData.append(FILE_FIELD, fileInput.files[0]);
+    formData.append("labname", selection.labname);
+    formData.append("a_code", codeInput.value);
+    const response = await fetch("/createanalisis", { method: "POST", body: formData });
+    const result = await readJsonResponse(response);
+    await reload();
+    if (result.ok && !result.data.message) alert("Se creó el análisis con éxito.");
+  } finally {
+    resetUI();
+    window.deactivateLoadScreen?.();
+  }
 }
 
 function descriptionText(data) {

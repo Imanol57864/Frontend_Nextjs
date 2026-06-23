@@ -62,7 +62,8 @@
     @apply grid items-stretch gap-3;
     grid-template-columns: minmax(190px, auto) minmax(280px, 1fr) minmax(390px, auto) minmax(280px, auto);
   }
-  .catalog-primary-action { @apply h-full whitespace-nowrap; }
+  .catalog-primary-action { @apply grid h-full gap-2 whitespace-nowrap; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .catalog-primary-action > * { @apply h-full; }
   .catalog-search { @apply min-w-0; }
   .catalog-command-cluster { @apply grid gap-2; grid-template-columns: minmax(74px, auto) minmax(248px, 1fr); }
   .catalog-command-cluster .btn-primary,
@@ -283,6 +284,7 @@
     .user-info { @apply max-w-full; }
     .logout-btn, .btn, .func_button, .btn-primary, .btn-secondary, .btn-danger { @apply w-full; }
     .confirm-actions { @apply w-full; }
+    .catalog-primary-action { grid-template-columns: 1fr; }
   }
 }
 

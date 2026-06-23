@@ -3,7 +3,7 @@ https://internationalfoodscontrol.duckdns.org/login
 
 ## Misc
 - [x] Proxying and cookies correctly implemented for prod env.
-- [] Creación cohesiva de análisis en el tablero correspondiente. (Solo normaliza la palabra clave del laboratorio)
+- [] CRON job para obtener archivo .tar de la base de datos semanalmente.
 
 ## Laboratorios
 - [x] Los laboratorios se borran en modo LIVE.
@@ -17,8 +17,12 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] Los análisis se borran en modo LIVE.
 - [x] Los análisis se crean en modo LIVE.
 - [x] Los análisis se editan en modo LIVE.
+- [x] Creación cohesiva de análisis en el tablero correspondiente. 
+- [x] Solo se normaliza la palabra clave del laboratorio para el ID del análisis.
 - [] Eliminar análisis necesita una validación con contraseña de un administrador.
 - [] [BUG] Crear un analisis lanza un error, es por los nombres de los archivos (Ya existe `sanitizeFileName` y `uploadAnalysisFile`.)
+- [] [BUG] La búsqueda universal en el tablero de análisis no busca a en la descripción porque es información que no existe en la celda. Cambialo para que búsque también en las celdas hidden, porque allí si se encuentra la información.
+
 
 ## Archivos
 - [x] Los archivos se borran en modo LIVE.
@@ -35,7 +39,6 @@ https://internationalfoodscontrol.duckdns.org/login
 - Formatear toda la columna en "estilo de excepciones", que seleccionen las rows aplicables
 - Selector/Visor que indique el precio que desea mostrar según el año seleccionado. Precio desde fecha de creación del análisis + (1+var_interés * años desde creación), y editable esa cantidad de interés.
 - No eligen una divisa por laboratorio, solo formatean el precio comunicado al cliente.
-- ? Eliminar la entidad Statics
 
 ## Reportes
 - [] Descarga de EXCEL para catálogo de análisis.
@@ -56,3 +59,4 @@ https://internationalfoodscontrol.duckdns.org/login
 - Ver archivos de acreditación de lab, columna de “valido hasta”.
 - Staticly, indicar que laboratorios están con acreditación activa hasta el día de hoy.
 - Los filtros de AG Table no son user-friendly.
+- ... Hacer que si se cambia la palabra clave de análisis de un laboratorio, que se refleje el cambio en todos los análisis.

@@ -2,7 +2,6 @@
 import PageChrome from "@/components/PageChrome";
 import LoadScreen from "@/components/LoadScreen";
 import ConfirmPopup from "@/components/ConfirmPopup";
-import CreateAnalisisPopup from "@/components/CreateAnalisisPopup";
 import LaboratoriesAgGrid from "@/components/LazyLaboratoriesAgGrid";
 import BackToDashboard from "@/components/BackToDashboard";
 import { Panel, PanelToolbar } from "@/components/Panel";
@@ -34,7 +33,6 @@ export default async function LaboratoriesPage() {
       </PageChrome>
       <LoadScreen />
       <ConfirmPopup />
-      <CreateAnalisisPopup />
     </>
   );
 }
