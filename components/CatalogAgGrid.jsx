@@ -322,16 +322,6 @@ function actionsRenderer(params) {
   }, "danger");
 }
 
-async function queryLabInfo(labname) {
-  const response = await fetch("/labinfo", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ labname })
-  });
-  const result = await readJsonResponse(response);
-  return result.ok ? result.data.data?.[0] : null;
-}
-
 async function sendTableChange(rowId, field, newValue) {
   return sendCellChange("/send-table-change/cell", rowId, field, newValue, (data, result) => !result.ok || data.IdDuplicate);
 }
@@ -371,7 +361,6 @@ async function exportPdf(api) {
   ]);
   const autoTable = autoTableModule.default;
 
-  const labname = document.getElementById("lab-title")?.textContent || "[...]";
   const rows = [];
   api.forEachNodeAfterFilterAndSort((node) => {
     const row = node.data;
@@ -387,9 +376,10 @@ async function exportPdf(api) {
       row.c_utilidad ?? ""
     ]);
   });
-
   const doc = new jsPDF({ orientation: "landscape" });
-  doc.text(`Reporte de los análisis del laboratorio ${labname}`, 14, 18);
+  const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+  const hoy = new Date().toLocaleDateString('es-ES', opciones);
+  doc.text(`Reporte de los análisis a ${hoy}`, 14, 18);
   autoTable(doc, {
     startY: 26,
     head: [["Código", "Descripción", "Cantidad", "Precio", "Categoría", "Costo", "Factor", "Envío", "Utilidad"]],
