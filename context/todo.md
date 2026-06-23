@@ -34,15 +34,9 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] Los divisas se editan en modo CACHÉ. 
 - [x] La divisa seleccionada se actualiza en modo LIVE según su valor en la casilla.
 - [x] La columna de Costo siempre utiliza la divisa seleccionada por el laboratorio.
-- [] La columna de Precio se formatea según el botón clickeado de divisa correctamente.
-
-- El costo SIEMPRE SERÁ LA MONEDA ELEGIDA, JAMÁS SE FORMATEA JAMÁS NADA. 
+- [x] Todas las demás columnas, deben iniciar con la divisa del laboratorio y después poder formatearse hacia la divisa indicada por el botón.
 - Con esa base, formateame todo lo demás a través de MXN, y luego mostrar el formatter
-
-### Notas
-- Formatear toda la columna en "estilo de excepciones", que seleccionen las rows aplicables
 - Selector/Visor que indique el precio que desea mostrar según el año seleccionado. Precio desde fecha de creación del análisis + (1+var_interés * años desde creación), y editable esa cantidad de interés.
-- No eligen una divisa por laboratorio, solo formatean el precio comunicado al cliente.
 
 ## Reportes
 - [] Descarga de EXCEL de la vista actual formateada para catálogo de análisis.
