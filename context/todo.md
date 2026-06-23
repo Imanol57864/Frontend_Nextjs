@@ -1,5 +1,6 @@
 ﻿# To Do List
 https://internationalfoodscontrol.duckdns.org/login
+17/30
 
 ## Misc
 - [x] Proxying and cookies correctly implemented for prod env.
@@ -23,7 +24,6 @@ https://internationalfoodscontrol.duckdns.org/login
 - [] [BUG] Crear un analisis lanza un error, es por los nombres de los archivos (Ya existe `sanitizeFileName` y `uploadAnalysisFile`.)
 - [] [BUG] La búsqueda universal en el tablero de análisis no busca a en la descripción porque es información que no existe en la celda. Cambialo para que búsque también en las celdas hidden, porque allí si se encuentra la información.
 
-
 ## Archivos
 - [x] Los archivos se borran en modo LIVE.
 - [x] Los archivos se crean en modo LIVE.
@@ -43,11 +43,12 @@ https://internationalfoodscontrol.duckdns.org/login
 ## Reportes
 - [] Descarga de EXCEL para catálogo de análisis.
 - [] Descarga de PDF para catálogo de análisis.
-- [] [BUG] Descargar PDF, las variables calculadas y el signo de divisa no aparecen.
+- [] [BUG] El signo de divisa no aparece al descargar PDF.
 - [] Agregar diseño profesional de la empresa.
 
 ## Sesiones
 - [] Cuando ingresa una persona, saca a la otra si ingresa las mismas credenciales.
+- [] Crear vistas para los usuarios que no son area administrativa.
 
 ## Notas del desarrollador
 - LIVE funciona con realtime enabled, RLS activado y sin polizas.
