@@ -1,6 +1,7 @@
 # Test environment is just running "npm i" "npm run dev" with node -v = 20+
 
 # Force new environment with: docker compose up --build --force-recreate -d
+# Force to revert to the previous commit with: git reset --hard origin/master
 
 # docker compose up --build -d 
 
