@@ -35,6 +35,7 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] La divisa seleccionada se actualiza en modo LIVE según su valor en la casilla.
 - [x] La columna de Costo siempre utiliza la divisa seleccionada por el laboratorio.
 - [x] Todas las demás columnas, deben iniciar con la divisa del laboratorio y después poder formatearse hacia la divisa indicada por el botón.
+- [x] [BUG] Al editar la tabla de análisis mientras está seleccionada una divisa no-base se borra el estado de la divisa.
 - Con esa base, formateame todo lo demás a través de MXN, y luego mostrar el formatter
 - Selector/Visor que indique el precio que desea mostrar según el año seleccionado. Precio desde fecha de creación del análisis + (1+var_interés * años desde creación), y editable esa cantidad de interés.
 

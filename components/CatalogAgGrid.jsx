@@ -31,6 +31,7 @@ const FILE_FIELD = "analisis_file";
 export default function CatalogAgGrid() {
   const gridRef = useRef(null);
   const rowsRef = useRef([]);
+  const rowCurrencyCacheRef = useRef(new Map());
   const divisaDestinoRef = useRef(null);
   const analysisRealtimeRef = useRef(null);
   const labRealtimeRef = useRef(null);
@@ -43,15 +44,15 @@ export default function CatalogAgGrid() {
       { headerName: "Laboratorio", field: "id_catLabos", width: 140, },
       { headerName: "Descripción", field: "descripcion", cellRenderer: descriptionRenderer, width: 430, autoHeight: true, wrapText: true, sortable: false },
       { headerName: "Cantidad", field: "y_cantidad", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
-      { headerName: "Precio", field: "y_precio", width: 140, valueFormatter: (params) => currencyFormatter(params, divisaDestinoRef) },
+      { headerName: "Precio", field: "y_precio", width: 140, valueFormatter: (params) => currencyFormatter(params, rowCurrencyCacheRef, divisaDestinoRef) },
       { headerName: "Categoría", field: "y_categoria", editable: true, cellEditor: "agSelectCellEditor", cellEditorParams: { values: CATEGORY_OPTIONS }, width: 220 },
-      { headerName: "Costo", field: "c_costo", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser, valueFormatter: costCurrencyFormatter },
+      { headerName: "Costo", field: "c_costo", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser, valueFormatter: (params) => costCurrencyFormatter(params, rowCurrencyCacheRef) },
       { headerName: "Factor", field: "c_factor", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
-      { headerName: "Envío", field: "c_envio", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser, valueFormatter: (params) => currencyFormatter(params, divisaDestinoRef) },
-      { headerName: "Utilidad", field: "c_utilidad", width: 140, valueFormatter: (params) => currencyFormatter(params, divisaDestinoRef) },
+      { headerName: "Envío", field: "c_envio", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser, valueFormatter: (params) => currencyFormatter(params, rowCurrencyCacheRef, divisaDestinoRef) },
+      { headerName: "Utilidad", field: "c_utilidad", width: 140, valueFormatter: (params) => currencyFormatter(params, rowCurrencyCacheRef, divisaDestinoRef) },
       { headerName: "Acciones", cellRenderer: actionsRenderer, width: 110, sortable: false, filter: false },
       { headerName: "Archivos", cellRenderer: filesViewRenderer, width: 140, sortable: false, filter: false },
-      { headerName: "Divisa", field: "catLabos.divisa_lab", valueGetter: (params) => rowCurrency(params.data), hide: true },
+      { headerName: "Divisa", field: "catLabos.divisa_lab", valueGetter: (params) => rowCurrency(params.data, rowCurrencyCacheRef), hide: true },
       ...Object.keys(DESCRIPTION_FIELDS).map((field) => ({ field, hide: true }))
     ],
     context: {
@@ -76,6 +77,8 @@ export default function CatalogAgGrid() {
       if (!result.ok) return false;
 
       rowsRef.current = result.data.data || [];
+      rowCurrencyCacheRef.current.clear();
+      cacheRowCurrencies(rowsRef.current, rowCurrencyCacheRef);
       setRows(apiRef.current, rowsRef.current);
       return true;
     } finally {
@@ -103,10 +106,18 @@ export default function CatalogAgGrid() {
   }
 
   function handleAnalisisEvent(data) {
+    if (data.type === "INSERT") return loadAnalisis();
+    if (data.type === "DELETE") rowCurrencyCacheRef.current.delete(String(data.id));
+
+    const currentRow = rowsRef.current.find((row) => String(row.id_analisis) === String(data.id));
+    const eventData = data.type === "UPDATE" && currentRow
+      ? { ...data, new_data: { ...currentRow, ...data.new_data } }
+      : data;
+
     return applyRealtimeRowEvent({
       api: apiRef.current,
       rowsRef,
-      data,
+      data: eventData,
       idField: "id_analisis",
       reload: () => loadAnalisis()
     });
@@ -407,25 +418,46 @@ function positiveRateFromInput(id) {
   return Number.isFinite(value) && value > 0 ? value : 1;
 }
 
-function costCurrencyFormatter(params) {
-  const divisa = rowCurrency(params.data);
+function costCurrencyFormatter(params, currencyCacheRef) {
+  const divisa = rowCurrency(params.data, currencyCacheRef);
   return formatCurrency(params.value, divisa);
 }
 
-function currencyFormatter(params, destinoRef) {
+function currencyFormatter(params, currencyCacheRef, destinoRef) {
   const rates = currencyRates();
   const valor = Number(params.value || 0);
-  const divisaBase = rowCurrency(params.data);
+  const divisaBase = rowCurrency(params.data, currencyCacheRef);
   const divisaDestino = destinoRef.current || divisaBase;
   const tasa = rates[divisaBase]?.[divisaDestino] ?? 1;
   const convertido = valor * tasa;
   return formatCurrency(convertido, divisaDestino);
 }
 
-function rowCurrency(data) {
+function cacheRowCurrencies(rows, currencyCacheRef) {
+  for (const row of rows) {
+    const divisa = currencyFromRow(row);
+    if (divisa && row?.id_analisis != null) {
+      currencyCacheRef.current.set(String(row.id_analisis), divisa);
+    }
+  }
+}
+
+function rowCurrency(data, currencyCacheRef) {
+  const divisa = currencyFromRow(data);
+  const rowId = data?.id_analisis != null ? String(data.id_analisis) : null;
+
+  if (divisa) {
+    if (rowId) currencyCacheRef.current.set(rowId, divisa);
+    return divisa;
+  }
+
+  return (rowId && currencyCacheRef.current.get(rowId)) || "MXN";
+}
+
+function currencyFromRow(data) {
   const laboratory = Array.isArray(data?.catLabos) ? data.catLabos[0] : data?.catLabos;
-  const divisa = String(laboratory?.divisa_lab || data?.divisa_lab || "MXN").toUpperCase();
-  return ["MXN", "USD", "EUR"].includes(divisa) ? divisa : "MXN";
+  const divisa = String(laboratory?.divisa_lab || data?.divisa_lab || "").toUpperCase();
+  return ["MXN", "USD", "EUR"].includes(divisa) ? divisa : null;
 }
 
 function formatCurrency(value, divisa) {
