@@ -27,6 +27,12 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 ## Por que no mezclar Alpine con la imagen de Puppeteer
 
+ghcr.io/puppeteer/puppeteer:24.43.1 ya es una imagen base completa con Node + Chrome listo para Puppeteer.
+
+La razón: no conviene mezclar node:20-alpine en deps/builder y una imagen Puppeteer Debian/Ubuntu en runner, porque node_modules puede instalar binarios distintos para Alpine (musl) vs Debian (glibc). Eso puede romper Next/SWC u otras dependencias nativas en runtime.
+
+Si fuese necesario usar `node:20-alpine` entonces la mejor opción ya no sería “imagen de Puppeteer” como base, sino un servicio separado tipo browserless/chromium y conectar Puppeteer remotamente. Ahí tu app seguiría en Alpine y Chrome viviría en otro contenedor.
+
 No conviene construir dependencias en `node:20-alpine` y ejecutar en una imagen Puppeteer basada en Debian/Ubuntu.
 
 Alpine usa `musl`, mientras que Debian/Ubuntu usa `glibc`. Algunas dependencias nativas de Node, como binarios de Next/SWC u otros paquetes compilados, pueden instalar variantes distintas segun la distribucion. Copiar `node_modules` entre esas bases puede provocar errores en runtime.
