@@ -101,13 +101,12 @@ export default function PopupRuntime() {
       // Este nuevo permite denegar espacios, nadie sabe como desean normalizar los id_análisis
       if (codeInput) codeInput.oninput = (event) => { event.target.value = event.target.value.replace(/\s/g, ""); };
 
-
       return resolvePopup("createAnalisisPopup", () => {
         const lab = labsByName.get(labSelect?.value);
         if (!lab) return alert("Selecciona un laboratorio."), false;
-        if (!lab.codigo_lab) return alert(`Necesitas establecer el código identificador de análisis para ${lab.nombre_lab}.`), false;
+        if (!lab.codigo_lab) return alert(`El laboratorio ${lab.nombre_lab} no ha establecido un código para análisis. Colocalo y recarga la página para volver a intentar.`), false;
         if (!fileInput?.files?.[0]) return alert("Ingresa una cotización antes de crear el análisis."), false;
-        if (codeInput?.value == "") return alert("Ingresa un código identificador de análisis."), false;
+        if (codeInput?.value == "") return alert("Ingresa un el número identificador del análisis."), false;
         return { labname: lab.nombre_lab, codigoLab: lab.codigo_lab };
       });
     };

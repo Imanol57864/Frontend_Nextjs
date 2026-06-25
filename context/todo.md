@@ -4,14 +4,17 @@ https://internationalfoodscontrol.duckdns.org/login
 ## Misc
 - [x] Proxying and cookies correctly implemented for prod env.
 - [] CRON job para obtener archivo .tar de la base de datos semanalmente.
+- [] [BUG] Restablecer los archivos rotos manualmente desde backup.
+- [LAST] [] Mejorar el diseño.
 
 ## Laboratorios
 - [x] Los laboratorios se borran en modo LIVE.
 - [x] Los laboratorios se crean en modo LIVE.
 - [x] Los laboratorios se editan en modo LIVE.
 - [x] Eliminar laboratorios necesitan una validación escrita de un usuario de area administrativa.
-- [] Justo antes de eliminar un laboratorio, el usuario debe recibir un archivo Excel/PDF de todos los análisis y la información del laboratorio, y entonces allí podrá borrarlo.
 - [x] [BUG] Alerta si el Código (palabra clave) o el nombre de un laboratorio ya está ocupado.
+- [] Mejorar la UX de crear laboratorio.
+- [] Si se cambia la palabra clave de análisis de un laboratorio, se refleja el cambio en todos los análisis. (toca quebrar el id_analisis).
 
 ## Análisis
 - [x] Los análisis se borran en modo LIVE.
@@ -20,7 +23,7 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] Creación cohesiva de análisis en el tablero correspondiente. 
 - [x] Solo se normaliza la palabra clave del laboratorio para el ID del análisis.
 - [x] Eliminar análisis necesitan una validación escrita de un usuario de area administrativa.
-- [] [BUG] La búsqueda universal en el tablero de análisis no busca a en la descripción porque es información que no existe en la celda. Cambialo para que búsque también en las celdas hidden, porque allí si se encuentra la información.
+- [] Fitros en este tablero. 
 
 ## Archivos
 - [x] Los archivos se borran en modo LIVE.
@@ -42,13 +45,12 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] [BUG] El signo de divisa no aparece al descargar PDF.
 - [x] Descarga de PDF de la vista actual formateada para catálogo de análisis.
 - [x] Agregar diseño profesional de la empresa a la exportación de PDF.
-- [] Descarga de EXCEL de la vista actual formateada para catálogo de análisis.
 
 ## Sesiones
 - [] Cuando ingresa una persona, saca a la otra si ingresa las mismas credenciales.
 - [] Crear vistas para los usuarios que no son area administrativa.
 - [] Aumentar la duración de los tokens, expiran o no se refrezcan correctamente.
-- [] [BUG] No se está refrezcando el token correctamente. (y existe un console.log por algún lado de los errores )
+- [] [BUG] No se está refrezcando el token correctamente. (y existe un console.log console.warn )
 Auth token validation failed {
   hasAccessToken: true,
   hasRefreshToken: true,
@@ -60,12 +62,10 @@ Auth token validation failed {
 - Revisar la carpeta ./context para más información.
 - Eliminar un laboratorio o análisis no borra los archivos (PDFs) y quedan resguardados a nivel raíz. La única manera de borrar PDFs es a través del tablero de cada análisis.
 
-## Posibles adiciones
-- PDF descargar análisis seleccionados.
+### Posibles adiciones
 - Tablero de archivos para laboratorios.
 - Ver archivos de acreditación de lab, columna de “valido hasta”.
 - Staticly, indicar que laboratorios están con acreditación activa hasta el día de hoy.
-- Los filtros de AG Table no son user-friendly.
-- ... Hacer que si se cambia la palabra clave de análisis de un laboratorio, que se refleje el cambio en todos los análisis.
-- Mejorar la UX de crear laboratorio.
-- Mejorar la UX haciendo todas las columnas allow nullable.
+- Justo antes de eliminar un laboratorio, el usuario debe recibir un archivo Excel/PDF de todos los análisis y la información del laboratorio, y entonces allí podrá borrarlo.
+- [] [REQUIERE ORDEN EN BIND] Integrar API de Bind para la actualización instantanea de los conceptos de venta ante el SAT.
+- [] Existe un heartbeat de los realtime-tokens, puede afectar el rendimiento.

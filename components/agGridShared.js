@@ -17,7 +17,6 @@ export const DEFAULT_GRID_OPTIONS = {
   animateRows: true,
   defaultColDef: {
     sortable: true,
-    filter: true,
     resizable: true,
     editable: false
   }

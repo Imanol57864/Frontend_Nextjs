@@ -54,6 +54,7 @@ export const POST = withApiUser(async ({ request }) => {
       }
     });
   } catch (error) {
+    // TO DO MANDAR EL ERROR AL USUARIO Y DIAGNOSTICARLO CON ALISON
     console.error("No se pudo generar el PDF con Puppeteer.", error);
     return jsonError("No se pudo generar el PDF.", 500);
   } finally {
