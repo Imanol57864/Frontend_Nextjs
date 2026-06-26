@@ -18,7 +18,7 @@ export async function POST(request) {
   if (relationError) return jsonError();
 
   const uuids = (relations ?? []).map((relation) => relation.uuid_archivo);
-  if (!uuids.length) return jsonOk({ message: "Este analisis no tiene archivos.", data: [] });
+  if (!uuids.length) return jsonOk();
 
   const { data: files, error: filesError } = await supabase
     .schema("storage")

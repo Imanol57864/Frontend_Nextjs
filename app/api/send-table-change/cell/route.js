@@ -13,6 +13,7 @@ export async function POST(request) {
   const { rowId, field, newValue } = change;
   const supabase = session.supabase;
 
+  /*
   if (field === "id_analisis") {
     const { data, error } = await supabase
       .from("catAnalisis")
@@ -24,6 +25,7 @@ export async function POST(request) {
       return duplicateCellResponse(`El ID "${data[0].id_analisis}" ya existe para el laboratorio "${data[0].catLabos.nombre_lab}"`);
     }
   }
+  */
 
   const { error } = await updateCell(supabase, "catAnalisis", "id_analisis", rowId, field, newValue);
   if (error) return jsonError();

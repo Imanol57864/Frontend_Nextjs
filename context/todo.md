@@ -13,8 +13,7 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] Los laboratorios se editan en modo LIVE.
 - [x] Eliminar laboratorios necesitan una validación escrita de un usuario de area administrativa.
 - [x] [BUG] Alerta si el Código (palabra clave) o el nombre de un laboratorio ya está ocupado.
-- [] Mejorar la UX de crear laboratorio.
-- [] Si se cambia la palabra clave de análisis de un laboratorio, se refleja el cambio en todos los análisis. (toca quebrar el id_analisis).
+- [x] Si se cambia la palabra clave para análisis de un laboratorio, se refleja el cambio en todos sus análisis. 
 
 ## Análisis
 - [x] Los análisis se borran en modo LIVE.
@@ -23,7 +22,6 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] Creación cohesiva de análisis en el tablero correspondiente. 
 - [x] Solo se normaliza la palabra clave del laboratorio para el ID del análisis.
 - [x] Eliminar análisis necesitan una validación escrita de un usuario de area administrativa.
-- [] Fitros en este tablero. 
 
 ## Archivos
 - [x] Los archivos se borran en modo LIVE.
@@ -64,9 +62,12 @@ Auth token validation failed {
 - Eliminar un laboratorio o análisis no borra los archivos (PDFs) y quedan resguardados a nivel raíz. La única manera de borrar PDFs es a través del tablero de cada análisis.
 
 ### Posibles adiciones
+- [] Filtros especiales en el tablero de análisis.
+- [] Mejorar la UX de crear laboratorio.
 - Tablero de archivos para laboratorios.
 - Ver archivos de acreditación de lab, columna de “valido hasta”.
 - Staticly, indicar que laboratorios están con acreditación activa hasta el día de hoy.
 - Justo antes de eliminar un laboratorio, el usuario debe recibir un archivo Excel/PDF de todos los análisis y la información del laboratorio, y entonces allí podrá borrarlo.
 - [] [REQUIERE ORDEN EN BIND] Integrar API de Bind para la actualización instantanea de los conceptos de venta ante el SAT.
 - [] Existe un heartbeat de los realtime-tokens, puede afectar el rendimiento.
+- Cambiar las rutas de files para que no muestren el id de la base de datos.

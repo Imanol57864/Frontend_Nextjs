@@ -40,7 +40,7 @@ export default function CatalogAgGrid() {
     ...DEFAULT_GRID_OPTIONS,
     getRowId: (params) => String(params.data.id_analisis),
     columnDefs: [
-      { headerName: "Código 2026", field: "id_analisis", editable: false, width: 140, cellEditor: "agTextCellEditor", pinned: 'left'},
+      { headerName: "Código", field: "codigo_completo", editable: false, width: 140, cellEditor: "agTextCellEditor", pinned: 'left'},
       { headerName: "Laboratorio", field: "id_catLabos", width: 140, },
       { headerName: "Descripción", field: "descripcion", cellRenderer: descriptionRenderer, width: 430, autoHeight: true, wrapText: true, sortable: false },
       { headerName: "Cantidad", field: "y_cantidad", editable: true, width: 140, cellEditor: "agNumberCellEditor", valueParser: numberParser },
@@ -52,6 +52,8 @@ export default function CatalogAgGrid() {
       { headerName: "Utilidad", field: "c_utilidad", width: 140, valueFormatter: (params) => currencyFormatter(params, rowCurrencyCacheRef, divisaDestinoRef) },
       { headerName: "Acciones", cellRenderer: actionsRenderer, width: 110, sortable: false, filter: false },
       { headerName: "Archivos", cellRenderer: filesViewRenderer, width: 140, sortable: false, filter: false },
+      //
+      { headerName: "ID DB", field: "id_analisis", editable: false, hide: true, pinned: 'left' },
       { headerName: "Divisa", field: "catLabos.divisa_lab", valueGetter: (params) => rowCurrency(params.data, rowCurrencyCacheRef), hide: true },
       ...Object.keys(DESCRIPTION_FIELDS).map((field) => ({ field, hide: true }))
     ],
@@ -382,8 +384,9 @@ function filesViewRenderer(params) {
 
 function actionsRenderer(params) {
   return makeButton("Eliminar", async () => {
-    const id = params.data.id_analisis;
-    const confirmacion = await window.confirmPopup?.(`¿Quieres borrar el análisis "${id}"?`, id, "análisis");
+    const id_analisis = params.data.id_analisis;
+    const builtId = params.data.built_id;
+    const confirmacion = await window.confirmPopup?.(`¿Quieres borrar el análisis "${builtId}"?`, builtId, "análisis");
     if (!confirmacion) return false;
     window.activateLoadScreen?.();
 
@@ -391,7 +394,7 @@ function actionsRenderer(params) {
       const response = await fetch("/deleteanalisis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id_analisis: id })
+        body: JSON.stringify({ id_analisis: id_analisis })
       });
       const result = await readJsonResponse(response);
       if (result.ok && !result.data.message) alert("Se borró el análisis con éxito.");

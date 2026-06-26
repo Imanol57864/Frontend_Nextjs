@@ -8,7 +8,7 @@ const DESCRIPTION_FIELDS = [
   ["desc_muestra_cantd", "Cantidad de muestra"]
 ];
 
-const ACCREDITATION_OPTIONS = ["a", "a,b", "MrS", "Mna", "b", "c", "d", "e", "f"];
+const ACCREDITATION_OPTIONS = ["a", "a,b", "MrS", "Mna", "b", "c", "d", "e", "f", "Mna,b"];
 
 export default function EditDescPopup() {
   return (

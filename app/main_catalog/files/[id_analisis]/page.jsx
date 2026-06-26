@@ -18,10 +18,11 @@ export default async function FilesPage({ params }) {
 
   const { data, error } = await supabase
     .from("catAnalisis")
-    .select("id_analisis")
+    .select("codigo_analisis, catLabos(codigo_lab)")
     .eq("id_analisis", idAnalisis);
 
   if (error || !data?.length) notFound();
+  const codigoDisplay = `${data[0].catLabos?.codigo_lab ?? ""}${data[0].codigo_analisis}`
 
   return (
     <>
@@ -36,7 +37,7 @@ export default async function FilesPage({ params }) {
               &bull; Para compartirlos, descárgalos y envíalos por otro medio.
             </p>
             <h3 id="id_analisis_div" className="analysis-id-card">
-              {idAnalisis}
+              {codigoDisplay}
             </h3>
             <BackToDashboard />
           </PanelToolbar>
