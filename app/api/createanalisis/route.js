@@ -17,28 +17,30 @@ export async function POST(request) {
   }
 
   const supabase = session.supabase;
+  
+  const { data: analisisData, error: analisisError } = await supabase
+    .from("catAnalisis")
+    .select("*")
+    .eq("id_catLabos", labname)
+    .eq("codigo_analisis", code);
 
-  /*
-  const { data: labs, error: labError } = await supabase
+  if (analisisError) return jsonError();
+  if (analisisData.length > 0) return jsonOk({ message: `El laboratorio ${labname} ya cuenta con un ID similar '' ${code} '' . Vuelve a intentarlo.`, data: [] });
+
+  // Creación del código compuesto una sola vez, existe un trigger para updates 
+  const { data: codigoLabData, error: codigoLabErr } = await supabase
     .from("catLabos")
     .select("codigo_lab")
     .eq("nombre_lab", labname);
+  if (codigoLabErr) return jsonError();
+  const display = `${codigoLabData?.[0]?.codigo_lab}${code}`
 
-  if (labError) return jsonError();
-  const labCode = labs?.[0]?.codigo_lab;
-  if (!labCode) {
-    return jsonOk({ message: "El laboratorio no cuenta con un código de análisis definido.", data: [] });
-  }
-  */
-
-  const { data: insertData ,error: insertError } = await supabase
+  const { data: insertData, error: insertError } = await supabase
     .from("catAnalisis")
-    .insert([{ codigo_analisis: code, id_catLabos: labname }])
+    .insert([{ codigo_analisis: code, id_catLabos: labname, codigo_completo: display}])
     .select();
 
   if (insertError) {
-    console.log("error!1", insertError)
-
     if (insertError.code === "23505") {
       return jsonOk({ message: "Se intentó crear un análisis con un ID ocupado. Vuelve a intentar.", data: [] });
     }
@@ -56,8 +58,6 @@ export async function POST(request) {
     file,
     tipoArchivo: "Cotización"
   });
-
-  console.log("error!2", fileError)
 
   if (fileError) return jsonError("Internal Server Error.", fileError.status || 500);
   return jsonOk();

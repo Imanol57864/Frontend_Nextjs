@@ -59,7 +59,7 @@ export default async function FilesPage({ params }) {
       </PageChrome>
       <LoadScreen />
       <ConfirmPopup />
-      <AddFilePopup idAnalisis={idAnalisis} />
+      <AddFilePopup idAnalisis={codigoDisplay} />
     </>
   );
 }

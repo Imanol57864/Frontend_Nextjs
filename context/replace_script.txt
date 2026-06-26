@@ -1,0 +1,40 @@
+# Carpeta base (la actual)
+$basePath = Get-Location
+
+# Recorre cada subcarpeta de la carpeta actual
+Get-ChildItem -Path $basePath -Directory | ForEach-Object {
+
+    $subFolder = $_
+
+    # Obtener la única sub-subcarpeta
+    $innerFolders = Get-ChildItem -Path $subFolder.FullName -Directory
+
+    if ($innerFolders.Count -ne 1) {
+        Write-Warning "La carpeta '$($subFolder.Name)' no tiene exactamente 1 subcarpeta. Se omite."
+        return
+    }
+
+    $innerFolder = $innerFolders[0]
+
+    # Obtener archivos dentro de la sub-subcarpeta
+    $files = Get-ChildItem -Path $innerFolder.FullName -File
+
+    if ($files.Count -eq 0) {
+        Write-Warning "No hay archivos en '$($innerFolder.FullName)'."
+        return
+    }
+
+    # Tomar el primer archivo (si hay más de uno)
+    $file = $files[0]
+
+    # Construir nuevo nombre usando el nombre de la sub-subcarpeta
+    $newName = $innerFolder.Name + $file.Extension
+
+    # Ruta destino
+    $newPath = Join-Path $innerFolder.FullName $newName
+
+    # Renombrar
+    Rename-Item -Path $file.FullName -NewName $newName
+
+    Write-Host "Renombrado: $($file.Name) -> $newName en $($innerFolder.FullName)"
+}

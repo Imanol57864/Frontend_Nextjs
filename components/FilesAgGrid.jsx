@@ -29,7 +29,7 @@ export default function FilesAgGrid({ idAnalisis }) {
     getRowId: (params) => String(params.data.basic_id),
     columnDefs: [
       { headerName: "Eliminar", cellRenderer: deleteRenderer, width: 120, sortable: false, filter: false },
-      { headerName: "Nombre del archivo", field: "nombre", width: 600 },
+      { headerName: "Nombre del archivo", field: "nombre", width: 300 },
       {
         headerName: "Tipo de archivo",
         field: "tipo",

@@ -53,7 +53,7 @@ export default function CatalogAgGrid() {
       { headerName: "Acciones", cellRenderer: actionsRenderer, width: 110, sortable: false, filter: false },
       { headerName: "Archivos", cellRenderer: filesViewRenderer, width: 140, sortable: false, filter: false },
       //
-      { headerName: "ID DB", field: "id_analisis", editable: false, hide: true, pinned: 'left' },
+      { headerName: "ID", field: "id_analisis", editable: false, hide: true, pinned: 'left' },
       { headerName: "Divisa", field: "catLabos.divisa_lab", valueGetter: (params) => rowCurrency(params.data, rowCurrencyCacheRef), hide: true },
       ...Object.keys(DESCRIPTION_FIELDS).map((field) => ({ field, hide: true }))
     ],
@@ -385,8 +385,8 @@ function filesViewRenderer(params) {
 function actionsRenderer(params) {
   return makeButton("Eliminar", async () => {
     const id_analisis = params.data.id_analisis;
-    const builtId = params.data.built_id;
-    const confirmacion = await window.confirmPopup?.(`¿Quieres borrar el análisis "${builtId}"?`, builtId, "análisis");
+    const codigo_completo = params.data.codigo_completo;
+    const confirmacion = await window.confirmPopup?.(`¿Quieres borrar el análisis "${codigo_completo}"?`, codigo_completo, "análisis");
     if (!confirmacion) return false;
     window.activateLoadScreen?.();
 

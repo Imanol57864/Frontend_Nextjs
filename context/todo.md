@@ -1,11 +1,12 @@
 ﻿# To Do List
 https://internationalfoodscontrol.duckdns.org/login
 
+
 ## Misc
 - [x] Proxying and cookies correctly implemented for prod env.
 - [] CRON job para obtener archivo .tar de la base de datos semanalmente.
-- [] [BUG] Restablecer los archivos rotos manualmente desde backup.
-- [LAST] [] Mejorar el diseño.
+- [x] [BUG] Restablecer los archivos rotos manualmente desde backup.
+- [] Editar codigo_analisis y parchar todo lo que pueda provocar duplicación de IDs.
 
 ## Laboratorios
 - [x] Los laboratorios se borran en modo LIVE.
@@ -25,8 +26,8 @@ https://internationalfoodscontrol.duckdns.org/login
 
 ## Archivos
 - [x] Los archivos se borran en modo LIVE.
-- [x] Los archivos se crean en modo LIVE.
-- [x] Los archivos se editan en modo LIVE. 
+- [] Los archivos se crean en modo LIVE.
+- [] Los archivos se editan en modo LIVE. 
 - [x] [BUG] Se genera un ciclo infinito de ediciones incorrectas que causan llamadas al backend.
 - [x] [BUG] La subida de un archivo con nombres que incluyen "ñ" y "acentos" hace que se cree un error. Esto afecta hasta el crear un análisis. (Fixed at `sanitizeFileName`).
 - [x] Los nombres de los archivos se normalizan antes de subirlos a la base de datos. (Se eliminan acentos, tildes, y Ñs).
@@ -37,7 +38,6 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] La columna de Costo siempre utiliza la divisa seleccionada por el laboratorio.
 - [x] Todas las demás columnas, deben iniciar con la divisa del laboratorio y después poder formatearse hacia la divisa indicada por el botón.
 - [x] [BUG] Al editar la tabla de análisis mientras está seleccionada una divisa no-base se borra el estado de la divisa.
-- [] Selector/Visor que indique el precio que desea mostrar según el año seleccionado. Precio desde fecha de creación del análisis + (1+var_interés * años desde creación), y editable esa cantidad de interés.
 
 ## Reportes
 - [x] [BUG] El signo de divisa no aparece al descargar PDF.
@@ -46,8 +46,9 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] [BUG] La creación de PDFs requiere tener chromium en el contenedor, por lo que ahora se instala con Dockerfile.
 
 ## Sesiones
-- [] Cuando ingresa una persona, saca a la otra si ingresa las mismas credenciales.
 - [] Crear vistas para los usuarios que no son area administrativa.
+views, y que las columnas se muestren solo si existe el atributo en data.data, asi bien escalable cawn
+- [] Cuando ingresa una persona, saca a la otra si ingresa las mismas credenciales.
 - [] Aumentar la duración de los tokens, expiran o no se refrezcan correctamente.
 - [] [BUG] No se está refrezcando el token correctamente. (y existe un console.log console.warn )
 Auth token validation failed {
@@ -62,6 +63,7 @@ Auth token validation failed {
 - Eliminar un laboratorio o análisis no borra los archivos (PDFs) y quedan resguardados a nivel raíz. La única manera de borrar PDFs es a través del tablero de cada análisis.
 
 ### Posibles adiciones
+- [LAST] [] Mejorar el diseño.
 - [] Filtros especiales en el tablero de análisis.
 - [] Mejorar la UX de crear laboratorio.
 - Tablero de archivos para laboratorios.
@@ -69,5 +71,5 @@ Auth token validation failed {
 - Staticly, indicar que laboratorios están con acreditación activa hasta el día de hoy.
 - Justo antes de eliminar un laboratorio, el usuario debe recibir un archivo Excel/PDF de todos los análisis y la información del laboratorio, y entonces allí podrá borrarlo.
 - [] [REQUIERE ORDEN EN BIND] Integrar API de Bind para la actualización instantanea de los conceptos de venta ante el SAT.
-- [] Existe un heartbeat de los realtime-tokens, puede afectar el rendimiento.
 - Cambiar las rutas de files para que no muestren el id de la base de datos.
+- [] Selector/Visor que indique el precio que desea mostrar según el año seleccionado. Precio desde fecha de creación del análisis + (1+var_interés * años desde creación), y editable esa cantidad de interés.
