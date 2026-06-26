@@ -5,6 +5,7 @@ import { clearAuthCookies } from "@/lib/auth";
 export async function POST(request) {
   const response = NextResponse.redirect(getPublicUrl(request, "/login"), { status: 303 });
   clearAuthCookies(response);
+  response.headers.set("Cache-Control", "no-store");
   return response;
 }
 

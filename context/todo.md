@@ -44,16 +44,10 @@ https://internationalfoodscontrol.duckdns.org/login
 - [x] [BUG] La creación de PDFs requiere tener chromium en el contenedor, por lo que ahora se instala con Dockerfile.
 
 ## Sesiones
+- [x] [BUG] Los tokens no tenían arquitectura de refresh. Se implementó setSession de Supabase client.
 - [] Crear vistas para los usuarios que no son area administrativa.
 views, y que las columnas se muestren solo si existe el atributo en data.data, asi bien escalable cawn
 - [] Cuando ingresa una persona, saca a la otra si ingresa las mismas credenciales.
-- [] Aumentar la duración de los tokens, expiran o no se refrezcan correctamente.
-- [] [BUG] No se está refrezcando el token correctamente. (y existe un console.log console.warn )
-Auth token validation failed {
-  hasAccessToken: true,
-  hasRefreshToken: true,
-  message: 'invalid JWT: unable to parse or verify signature, token has invalid claims: token is expired'
-}
 
 ## Notas del desarrollador
 - LIVE funciona con realtime enabled, RLS activado y sin polizas.

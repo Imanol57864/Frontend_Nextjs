@@ -20,7 +20,7 @@ export async function POST(request) {
         if (error.message.includes("Invalid login credentials")) {
           message = "Email o contraseña incorrectos.";
         } else if (error.message.includes("Email not confirmed")) {
-          message = "Tu email aun no ha sido confirmado.";
+          message = "Tu email aún no ha sido confirmado.";
         } else {
           message = error;
         }
