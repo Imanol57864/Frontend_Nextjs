@@ -14,7 +14,7 @@ export const metadata = {
 
 export default async function FilesPage({ params }) {
   const { id_analisis: idAnalisis } = await params;
-  const { supabase, user } = await requirePageUser();
+  const { supabase, user, areaId } = await requirePageUser();
 
   const { data, error } = await supabase
     .from("catAnalisis")
@@ -26,7 +26,7 @@ export default async function FilesPage({ params }) {
 
   return (
     <>
-      <PageChrome userEmail={user.email ?? "[...]"}>
+      <PageChrome userEmail={user.email ?? "[...]"} areaId={areaId}>
         <Panel className="page-intro">
           <PanelToolbar columns="panel-grid-3" className="mb-0">
             <p className="notice-card">

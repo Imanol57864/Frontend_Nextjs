@@ -1,36 +1,20 @@
 {
-    "1": {
-        "analisis": {
-            "function_01": true,
-            "function_02": false,
-            "function_03": true
-        },
-        "labos": {
-            "function_01": true,
-            "function_02": false,
-            "function_03": true
-        },
-        "archivos": {
-            "function_01": true,
-            "function_02": false,
-            "function_03": true
-        }
+    "analisis": {
+        "access_view": true,
+        "read_data": true,
+        "cud_data": [1],
+
+        "money_funcs": [1],
+        "money_columns": [1]
     },
-    "2": {
-        "analisis": {
-            "function_01": true,
-            "function_02": false,
-            "function_03": true
-        },
-        "labos": {
-            "function_01": true,
-            "function_02": false,
-            "function_03": true
-        },
-        "archivos": {
-            "function_01": true,
-            "function_02": false,
-            "function_03": true
-        }
+    "labs": {
+        "access_view": [1],
+        "read_data": [1],
+        "cud_data": [1]
+    },
+    "files": {
+        "access_view": [1],
+        "read_data": [1], 
+        "cud_data": [1]
     }
 }

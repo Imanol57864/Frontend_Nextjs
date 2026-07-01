@@ -14,11 +14,11 @@ export const metadata = {
 };
 
 export default async function CatalogPage() {
-  const { user } = await requirePageUser();
+  const { user, areaId } = await requirePageUser();
 
   return (
     <>
-      <PageChrome userEmail={user.email ?? "[...]"}>
+      <PageChrome userEmail={user.email ?? "[...]"} areaId={areaId}>
         <Panel>
           <PanelBody className="catalog-sticky-toolbar">
             <div className="catalog-topbar">

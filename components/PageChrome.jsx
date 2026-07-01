@@ -1,9 +1,10 @@
 import PopupRuntime from "./PopupRuntime";
 import Image from "next/image";
+import { UserAreaProvider } from "./UserAreaContext";
 
-export default function PageChrome({ userEmail, children }) {
+export default function PageChrome({ userEmail, areaId = null, children }) {
   return (
-    <>
+    <UserAreaProvider areaId={areaId}>
       <PopupRuntime />
       <header className="app-header">
         <div className="login-brand" style={{ margin: 0 }}>
@@ -32,6 +33,6 @@ export default function PageChrome({ userEmail, children }) {
       <footer className="footer">
         &copy; 2026 International Foods Control, México
       </footer>
-    </>
+    </UserAreaProvider>
   );
 }

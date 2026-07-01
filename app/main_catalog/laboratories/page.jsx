@@ -11,11 +11,12 @@ export const metadata = {
 };
 
 export default async function LaboratoriesPage() {
-  const { user } = await requirePageUser();
+  const { user, areaId } = await requirePageUser();
+  console.log("areaId!", areaId);
 
   return (
     <>
-      <PageChrome userEmail={user.email ?? "[...]"}>
+      <PageChrome userEmail={user.email ?? "[...]"} areaId={areaId}>
         <Panel id="bottomTables">
           <PanelToolbar columns="panel-grid-3">
             <div className="panel-control">
