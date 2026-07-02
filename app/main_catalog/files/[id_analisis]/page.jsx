@@ -7,22 +7,20 @@ import AddFilePopup from "@/components/AddFilePopup";
 import FilesAgGrid from "@/components/LazyFilesAgGrid";
 import BackToDashboard from "@/components/BackToDashboard";
 import { Panel, PanelToolbar } from "@/components/Panel";
+import { canUseIam } from "@/lib/iam";
 
 export const metadata = {
   title: "IFC | Archivos"
 };
 
 export default async function FilesPage({ params }) {
-  const { id_analisis: idAnalisis } = await params;
   const { supabase, user, areaId } = await requirePageUser();
+  if (!canUseIam("files", "access_view", areaId)) notFound();
 
-  const { data, error } = await supabase
-    .from("catAnalisis")
-    .select("codigo_analisis, catLabos(codigo_lab)")
-    .eq("id_analisis", idAnalisis);
-
+  const { id_analisis: idAnalisis } = await params;
+  const { data, error } = await supabase.from("catAnalisis").select("codigo_completo").eq("id_analisis", idAnalisis);
   if (error || !data?.length) notFound();
-  const codigoDisplay = `${data[0].catLabos?.codigo_lab ?? ""}${data[0].codigo_analisis}`
+  const codigoDisplay = data[0].codigo_completo;
 
   return (
     <>

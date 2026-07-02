@@ -17,11 +17,15 @@ import {
   useQuickFilter,
   useRealtimeConnectionGate
 } from "./agGridShared";
+import { canUseIam } from "@/lib/iam";
+import { useUserArea } from "@/components/UserAreaContext";
 
 const FILE_FIELD = "analisis_file";
 const FILE_TYPE_OPTIONS = ["Acreditación", "Cotización", "Ficha Técnica", "Básico"];
 
 export default function FilesAgGrid({ idAnalisis }) {
+  const { areaId } = useUserArea();
+  const iamArea = "labs";
   const gridRef = useRef(null);
   const rowsRef = useRef([]);
   const realtimeRef = useRef(null);
@@ -31,7 +35,7 @@ export default function FilesAgGrid({ idAnalisis }) {
     ...DEFAULT_GRID_OPTIONS,
     getRowId: (params) => String(params.data.basic_id),
     columnDefs: [
-      { headerName: "Eliminar", cellRenderer: deleteRenderer, width: 120, sortable: false, filter: false },
+      { headerName: "Eliminar", hide: !canUseIam(iamArea, "delete_actions", areaId), cellRenderer: deleteRenderer, width: 120, sortable: false, filter: false },
       { headerName: "Nombre del archivo", field: "nombre", width: 300 },
       {
         headerName: "Tipo de archivo",

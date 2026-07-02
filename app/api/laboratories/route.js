@@ -2,11 +2,11 @@
 import { jsonError, jsonOk } from "@/lib/http";
 
 export const POST = withApiUser(async ({ supabase }) => {
-  const { data, error } = await supabase
-    .from("catLabos")
-    .select("*")
-    .order("nombre_lab", { ascending: true });
+
+  // Remote Procedure Call, filters READ logic based on area.id
+  const { data , error } = await supabase.rpc("get_labs");
+
   if (error) return jsonError();
-  if (!data?.length) return jsonOk({ message: "Crea el primer laboratorio.", data: [] });
-  return jsonOk({ message: "", data });
+  return jsonOk({ message: "", data: data ?? [] });
+  
 });

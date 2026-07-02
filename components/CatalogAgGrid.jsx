@@ -508,7 +508,7 @@ async function exportPdf(api, currencyCacheRef, selectedCurrency) {
   api.forEachNodeAfterFilterAndSort((node) => {
     const row = node.data;
     rows.push({
-      code: row.id_analisis,
+      code: row.codigo_completo,
       description: pdfDescriptionText(row),
       quantity: row.y_cantidad ?? "",
       price: currencyFormatter({ value: row.y_precio, data: row }, currencyCacheRef, destinoRef),
